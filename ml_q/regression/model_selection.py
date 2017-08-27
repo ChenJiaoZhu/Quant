@@ -6,7 +6,7 @@ from sklearn.model_selection import cross_validate
 from sklearn.model_selection import GridSearchCV
 from sklearn.svm import SVR, LinearSVR
 from sklearn.linear_model import LinearRegression, Lasso, Ridge
-from sklearn.ensemble import RandomForestRegressor
+from sklearn.ensemble import RandomForestRegressor, ExtraTreesRegressor
 
 
 def lr_cross_validation(X, y):
@@ -90,6 +90,26 @@ def svr_grid_search(X, y):
                 print "%0.8f for %r    [X.shape=%s, cv=%s]" % \
                       (mean_test_score, params, str(X.shape), cv)
 
+
+def etr_grid_search(X, y):
+
+    print "R^2 scores calculated on training set:"
+    cv = 3
+    for n in [200, 500, 1000, 2000]:
+        # Set the parameters by cross-validation
+        tuned_parameters = [{'n_estimators': [n]}]
+        # tuned_parameters = [{'n_estimators': [200, 500, 1000],
+        #                      'max_features': ['auto', 'log2'],
+        #                      'min_samples_leaf': [1, 10, 50]}]
+
+        # Perform the grid search on the tuned parameters
+        model = GridSearchCV(ExtraTreesRegressor(n_jobs=2), tuned_parameters, cv=cv)
+        model.fit(X, y)
+
+        for mean_test_score, params in zip(model.cv_results_['mean_test_score'],
+                                              model.cv_results_['params']):
+            print "%0.8f for %r    [X.shape=%s, cv=%s]" % \
+                  (mean_test_score, params, str(X.shape), cv)
 
 def rfr_grid_search(X, y):
 
