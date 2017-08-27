@@ -75,6 +75,7 @@ LSVR:
 0.98032460 for {'C': 10000}    [X.shape=(105120, 212), cv=10]
 0.97857526 for {'C': 100000}    [X.shape=(105120, 212), cv=10]
 
-SVR:
-0.98349149 for {'kernel': 'rbf', 'C': 1, 'gamma': 0.01}    [X.shape=(105120, 212), cv=3]
-0.98667657 for {'kernel': 'rbf', 'C': 10, 'gamma': 0.01}    [X.shape=(105120, 212), cv=3]
+SVR  [n_jobs=2]:
+0.98349149 for {'kernel': 'rbf', 'C': 1, 'gamma': 0.01}    [X.shape=(105120, 212), cv=3]  300 min
+0.98667657 for {'kernel': 'rbf', 'C': 10, 'gamma': 0.01}    [X.shape=(105120, 212), cv=3]  420 min
+0.98902097 for {'kernel': 'rbf', 'C': 100, 'gamma': 0.01}    [X.shape=(105120, 212), cv=3]  1050 min
