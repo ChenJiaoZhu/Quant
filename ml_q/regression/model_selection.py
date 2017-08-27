@@ -91,21 +91,23 @@ def svr_grid_search(X, y):
                       (mean_test_score, params, str(X.shape), cv)
 
 
-def rfr_grid_search(X_train, X_test, y_train, y_test):
-
-    # Set the parameters by cross-validation
-    tuned_parameters = [{'n_estimators': [200, 500, 1000],
-                         'max_features': ['auto', 'log2'],
-                         'min_samples_leaf': [1, 10, 50]}]
-
-    # Perform the grid search on the tuned parameters
-    model = GridSearchCV(RandomForestRegressor(n_jobs=2), tuned_parameters, cv=10)
-    model.fit(X_train, y_train)
-
-    print "Optimised parameters found on training set:"
-    print model.best_estimator_, "\n"
+def rfr_grid_search(X, y):
 
     print "R^2 scores calculated on training set:"
-    for mean_test_score, params in zip(model.cv_results_['mean_test_score'],
-                                          model.cv_results_['params']):
-        print "%0.8f for %r" % (mean_test_score, params)
+    cv = 3
+    for n in [200, 500, 1000, 2000]:
+        # Set the parameters by cross-validation
+        tuned_parameters = [{'n_estimators': [n]}]
+        # tuned_parameters = [{'n_estimators': [200, 500, 1000],
+        #                      'max_features': ['auto', 'log2'],
+        #                      'min_samples_leaf': [1, 10, 50]}]
+
+        # Perform the grid search on the tuned parameters
+        model = GridSearchCV(RandomForestRegressor(n_jobs=2), tuned_parameters, cv=cv)
+        model.fit(X, y)
+
+        for mean_test_score, params in zip(model.cv_results_['mean_test_score'],
+                                              model.cv_results_['params']):
+            print "%0.8f for %r    [X.shape=%s, cv=%s]" % \
+                  (mean_test_score, params, str(X.shape), cv)
+
