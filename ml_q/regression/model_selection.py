@@ -145,3 +145,40 @@ def rfr_grid_search(X, y):
             print "%0.8f for %r    [X.shape=%s, cv=%s]  %0.2f min" % \
                   (mean_test_score, params, str(X.shape), cv, (end-start)/60)
 
+
+def etr_search(X_train, X_test, y_train, y_test):
+
+    print "R^2 scores calculated on test set:"
+    start = time.time()
+    n_jobs = 2
+    cv = 0
+    for n in [20, 200, 500, 1000, 2000]:
+        # tuned_parameters = [{'n_estimators': [200, 500, 1000],
+        #                      'max_features': ['auto', 'log2'],
+        #                      'min_samples_leaf': [1, 10, 50]}]
+        params = {'n_estimators': n, 'n_jobs': n_jobs}
+        model = ExtraTreesRegressor(n_estimators=n, n_jobs=n_jobs)
+        model.fit(X_train, y_train)
+        end = time.time()
+
+        print "%0.8f for %r    [X_train.shape=%s, cv=%s]  %0.2f min" % \
+        (model.score(X_test, y_test), params, str(X_train.shape), cv, (end-start)/60)
+
+
+def rfr_search(X_train, X_test, y_train, y_test):
+
+    print "R^2 scores calculated on test set:"
+    start = time.time()
+    n_jobs = 2
+    cv = 0
+    for n in [20, 200, 500, 1000, 2000]:
+        # tuned_parameters = [{'n_estimators': [200, 500, 1000],
+        #                      'max_features': ['auto', 'log2'],
+        #                      'min_samples_leaf': [1, 10, 50]}]
+        params = {'n_estimators': n, 'n_jobs': n_jobs}
+        model = RandomForestRegressor(n_estimators=n, n_jobs=n_jobs)
+        model.fit(X_train, y_train)
+        end = time.time()
+
+        print "%0.8f for %r    [X_train.shape=%s, cv=%s]  %0.2f min" % \
+        (model.score(X_test, y_test), params, str(X_train.shape), cv, (end-start)/60)
