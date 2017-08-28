@@ -120,3 +120,19 @@ ETR:
 0.98775739 for {'n_estimators': 1000, 'max_features': 'log2', 'n_jobs': 2}    [X_train.shape=(73584, 212), cv=0]  1.70 min
 0.98779394 for {'n_estimators': 1200, 'max_features': 'log2', 'n_jobs': 2}    [X_train.shape=(73584, 212), cv=0]  2.02 min
 0.98778778 for {'n_estimators': 1400, 'max_features': 'log2', 'n_jobs': 2}    [X_train.shape=(73584, 212), cv=0]  2.37 min
+
+
+RFR:
+0.98741005 for {'n_estimators': 20, 'max_features': 'sqrt', 'n_jobs': 2}    [X_train.shape=(73584, 212), cv=0]  0.16 min
+0.98813761 for {'n_estimators': 100, 'max_features': 'sqrt', 'n_jobs': 2}    [X_train.shape=(73584, 212), cv=0]  0.73 min
+0.98828027 for {'n_estimators': 200, 'max_features': 'sqrt', 'n_jobs': 2}    [X_train.shape=(73584, 212), cv=0]  1.48 min
+0.98837928 for {'n_estimators': 500, 'max_features': 'sqrt', 'n_jobs': 2}    [X_train.shape=(73584, 212), cv=0]  3.67 min
+0.98836538 for {'n_estimators': 650, 'max_features': 'sqrt', 'n_jobs': 2}    [X_train.shape=(73584, 212), cv=0]  4.87 min
+0.98839391 for {'n_estimators': 850, 'max_features': 'sqrt', 'n_jobs': 2}    [X_train.shape=(73584, 212), cv=0]  6.28 min
+0.98839838 for {'n_estimators': 900, 'max_features': 'sqrt', 'n_jobs': 2}    [X_train.shape=(73584, 212), cv=0]  6.54 min
+0.98845309 for {'n_estimators': 1000, 'max_features': 'sqrt', 'n_jobs': 2}    [X_train.shape=(73584, 212), cv=0]  7.54 min
+0.98845636 for {'n_estimators': 1150, 'max_features': 'sqrt', 'n_jobs': 2}    [X_train.shape=(73584, 212), cv=0]  8.49 min
+0.98843213 for {'n_estimators': 1350, 'max_features': 'sqrt', 'n_jobs': 2}    [X_train.shape=(73584, 212), cv=0]  9.94 min
+0.98846655 for {'n_estimators': 1500, 'max_features': 'sqrt', 'n_jobs': 2}    [X_train.shape=(73584, 212), cv=0]  11.07 min
+0.98840114 for {'n_estimators': 1700, 'max_features': 'sqrt', 'n_jobs': 2}    [X_train.shape=(73584, 212), cv=0]  12.72 min
+0.98843973 for {'n_estimators': 2000, 'max_features': 'sqrt', 'n_jobs': 2}    [X_train.shape=(73584, 212), cv=0]  14.63 min
