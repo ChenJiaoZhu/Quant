@@ -152,7 +152,7 @@ def etr_search(X_train, X_test, y_train, y_test):
     start = time.time()
     n_jobs = 2
     cv = 0
-    for n in [20, 200, 500, 1000, 2000]:
+    for n in [20, 100, 200, 500, 1000, 1500, 2000]:
         # tuned_parameters = [{'n_estimators': [200, 500, 1000],
         #                      'max_features': ['auto', 'log2'],
         #                      'min_samples_leaf': [1, 10, 50]}]
