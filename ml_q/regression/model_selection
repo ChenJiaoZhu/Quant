@@ -133,6 +133,9 @@ ETR:
 0.98775739 for {'n_estimators': 1000, 'max_features': 'log2', 'n_jobs': 2}    [X_train.shape=(73584, 212), cv=0]  1.70 min
 0.98779394 for {'n_estimators': 1200, 'max_features': 'log2', 'n_jobs': 2}    [X_train.shape=(73584, 212), cv=0]  2.02 min
 0.98778778 for {'n_estimators': 1400, 'max_features': 'log2', 'n_jobs': 2}    [X_train.shape=(73584, 212), cv=0]  2.37 min
+'n_estimators': 1000       'max_features': 0.5
+
+
 
 
 RFR:
@@ -149,3 +152,41 @@ RFR:
 0.98846655 for {'n_estimators': 1500, 'max_features': 'sqrt', 'n_jobs': 2}    [X_train.shape=(73584, 212), cv=0]  11.07 min
 0.98840114 for {'n_estimators': 1700, 'max_features': 'sqrt', 'n_jobs': 2}    [X_train.shape=(73584, 212), cv=0]  12.72 min
 0.98843973 for {'n_estimators': 2000, 'max_features': 'sqrt', 'n_jobs': 2}    [X_train.shape=(73584, 212), cv=0]  14.63 min
+'n_estimators': 1000
+0.98302544 for {'n_jobs': 6, 'min_samples_leaf': 100, 'n_estimators': 1000, 'min_samples_split': 50, 'max_features': 'sqrt', 'max_depth': 5}    [X_train.shape=(73584, 212), cv=0]  1.00 min
+0.97876590 for {'n_jobs': 6, 'min_samples_leaf': 200, 'n_estimators': 1000, 'min_samples_split': 50, 'max_features': 'sqrt', 'max_depth': 5}    [X_train.shape=(73584, 212), cv=0]  0.97 min
+0.97589416 for {'n_jobs': 6, 'min_samples_leaf': 400, 'n_estimators': 1000, 'min_samples_split': 50, 'max_features': 'sqrt', 'max_depth': 5}    [X_train.shape=(73584, 212), cv=0]  0.96 min
+0.97379946 for {'n_jobs': 6, 'min_samples_leaf': 600, 'n_estimators': 1000, 'min_samples_split': 50, 'max_features': 'sqrt', 'max_depth': 5}    [X_train.shape=(73584, 212), cv=0]  0.94 min
+0.96761985 for {'n_jobs': 6, 'min_samples_leaf': 800, 'n_estimators': 1000, 'min_samples_split': 50, 'max_features': 'sqrt', 'max_depth': 5}    [X_train.shape=(73584, 212), cv=0]  0.94 min
+0.98295658 for {'n_jobs': 6, 'min_samples_leaf': 100, 'n_estimators': 1000, 'min_samples_split': 200, 'max_features': 'sqrt', 'max_depth': 5}    [X_train.shape=(73584, 212), cv=0]  0.97 min
+0.97895172 for {'n_jobs': 6, 'min_samples_leaf': 200, 'n_estimators': 1000, 'min_samples_split': 200, 'max_features': 'sqrt', 'max_depth': 5}    [X_train.shape=(73584, 212), cv=0]  0.97 min
+0.97581310 for {'n_jobs': 6, 'min_samples_leaf': 400, 'n_estimators': 1000, 'min_samples_split': 200, 'max_features': 'sqrt', 'max_depth': 5}    [X_train.shape=(73584, 212), cv=0]  0.96 min
+0.97399169 for {'n_jobs': 6, 'min_samples_leaf': 600, 'n_estimators': 1000, 'min_samples_split': 200, 'max_features': 'sqrt', 'max_depth': 5}    [X_train.shape=(73584, 212), cv=0]  0.95 min
+0.96779561 for {'n_jobs': 6, 'min_samples_leaf': 800, 'n_estimators': 1000, 'min_samples_split': 200, 'max_features': 'sqrt', 'max_depth': 5}    [X_train.shape=(73584, 212), cv=0]  0.94 min
+0.98132011 for {'n_jobs': 6, 'min_samples_leaf': 100, 'n_estimators': 1000, 'min_samples_split': 500, 'max_features': 'sqrt', 'max_depth': 5}    [X_train.shape=(73584, 212), cv=0]  0.97 min
+0.97952031 for {'n_jobs': 6, 'min_samples_leaf': 200, 'n_estimators': 1000, 'min_samples_split': 500, 'max_features': 'sqrt', 'max_depth': 5}    [X_train.shape=(73584, 212), cv=0]  0.96 min
+0.97582085 for {'n_jobs': 6, 'min_samples_leaf': 400, 'n_estimators': 1000, 'min_samples_split': 500, 'max_features': 'sqrt', 'max_depth': 5}    [X_train.shape=(73584, 212), cv=0]  0.95 min
+0.97406133 for {'n_jobs': 6, 'min_samples_leaf': 600, 'n_estimators': 1000, 'min_samples_split': 500, 'max_features': 'sqrt', 'max_depth': 5}    [X_train.shape=(73584, 212), cv=0]  0.94 min
+0.96754518 for {'n_jobs': 6, 'min_samples_leaf': 800, 'n_estimators': 1000, 'min_samples_split': 500, 'max_features': 'sqrt', 'max_depth': 5}    [X_train.shape=(73584, 212), cv=0]  0.93 min
+0.97811358 for {'n_jobs': 6, 'min_samples_leaf': 100, 'n_estimators': 1000, 'min_samples_split': 800, 'max_features': 'sqrt', 'max_depth': 5}    [X_train.shape=(73584, 212), cv=0]  0.96 min
+0.97719479 for {'n_jobs': 6, 'min_samples_leaf': 200, 'n_estimators': 1000, 'min_samples_split': 800, 'max_features': 'sqrt', 'max_depth': 5}    [X_train.shape=(73584, 212), cv=0]  0.95 min
+0.97605959 for {'n_jobs': 6, 'min_samples_leaf': 400, 'n_estimators': 1000, 'min_samples_split': 800, 'max_features': 'sqrt', 'max_depth': 5}    [X_train.shape=(73584, 212), cv=0]  0.95 min
+0.97387178 for {'n_jobs': 6, 'min_samples_leaf': 600, 'n_estimators': 1000, 'min_samples_split': 800, 'max_features': 'sqrt', 'max_depth': 5}    [X_train.shape=(73584, 212), cv=0]  0.94 min
+0.96748803 for {'n_jobs': 6, 'min_samples_leaf': 800, 'n_estimators': 1000, 'min_samples_split': 800, 'max_features': 'sqrt', 'max_depth': 5}    [X_train.shape=(73584, 212), cv=0]  0.93 min
+0.97787752 for {'n_jobs': 6, 'min_samples_leaf': 100, 'n_estimators': 1000, 'min_samples_split': 1000, 'max_features': 'sqrt', 'max_depth': 5}    [X_train.shape=(73584, 212), cv=0]  0.96 min
+0.97744599 for {'n_jobs': 6, 'min_samples_leaf': 200, 'n_estimators': 1000, 'min_samples_split': 1000, 'max_features': 'sqrt', 'max_depth': 5}    [X_train.shape=(73584, 212), cv=0]  0.96 min
+0.97594457 for {'n_jobs': 6, 'min_samples_leaf': 400, 'n_estimators': 1000, 'min_samples_split': 1000, 'max_features': 'sqrt', 'max_depth': 5}    [X_train.shape=(73584, 212), cv=0]  0.95 min
+0.97412177 for {'n_jobs': 6, 'min_samples_leaf': 600, 'n_estimators': 1000, 'min_samples_split': 1000, 'max_features': 'sqrt', 'max_depth': 5}    [X_train.shape=(73584, 212), cv=0]  0.95 min
+0.96819847 for {'n_jobs': 6, 'min_samples_leaf': 800, 'n_estimators': 1000, 'min_samples_split': 1000, 'max_features': 'sqrt', 'max_depth': 5}    [X_train.shape=(73584, 212), cv=0]  0.93 min
+0.97741878 for {'n_jobs': 6, 'min_samples_leaf': 100, 'n_estimators': 1000, 'min_samples_split': 1500, 'max_features': 'sqrt', 'max_depth': 5}    [X_train.shape=(73584, 212), cv=0]  0.95 min
+0.97675143 for {'n_jobs': 6, 'min_samples_leaf': 200, 'n_estimators': 1000, 'min_samples_split': 1500, 'max_features': 'sqrt', 'max_depth': 5}    [X_train.shape=(73584, 212), cv=0]  0.95 min
+0.97529952 for {'n_jobs': 6, 'min_samples_leaf': 400, 'n_estimators': 1000, 'min_samples_split': 1500, 'max_features': 'sqrt', 'max_depth': 5}    [X_train.shape=(73584, 212), cv=0]  0.94 min
+0.97351463 for {'n_jobs': 6, 'min_samples_leaf': 600, 'n_estimators': 1000, 'min_samples_split': 1500, 'max_features': 'sqrt', 'max_depth': 5}    [X_train.shape=(73584, 212), cv=0]  0.94 min
+0.96783982 for {'n_jobs': 6, 'min_samples_leaf': 800, 'n_estimators': 1000, 'min_samples_split': 1500, 'max_features': 'sqrt', 'max_depth': 5}    [X_train.shape=(73584, 212), cv=0]  0.93 min
+0.97714730 for {'n_jobs': 6, 'min_samples_leaf': 100, 'n_estimators': 1000, 'min_samples_split': 2000, 'max_features': 'sqrt', 'max_depth': 5}    [X_train.shape=(73584, 212), cv=0]  0.94 min
+0.97646027 for {'n_jobs': 6, 'min_samples_leaf': 200, 'n_estimators': 1000, 'min_samples_split': 2000, 'max_features': 'sqrt', 'max_depth': 5}    [X_train.shape=(73584, 212), cv=0]  0.94 min
+0.97541825 for {'n_jobs': 6, 'min_samples_leaf': 400, 'n_estimators': 1000, 'min_samples_split': 2000, 'max_features': 'sqrt', 'max_depth': 5}    [X_train.shape=(73584, 212), cv=0]  0.94 min
+0.97312331 for {'n_jobs': 6, 'min_samples_leaf': 600, 'n_estimators': 1000, 'min_samples_split': 2000, 'max_features': 'sqrt', 'max_depth': 5}    [X_train.shape=(73584, 212), cv=0]  0.93 min
+0.96773173 for {'n_jobs': 6, 'min_samples_leaf': 800, 'n_estimators': 1000, 'min_samples_split': 2000, 'max_features': 'sqrt', 'max_depth': 5}    [X_train.shape=(73584, 212), cv=0]  0.92 min
+ 'min_samples_leaf' < 100      'min_samples_split' < 200
+
