@@ -149,9 +149,9 @@ def rfr_grid_search(X, y):
 def etr_search(X_train, X_test, y_train, y_test):
 
     print "R^2 scores calculated on test set:"
-    n_jobs = 2
+    n_jobs = 4
     cv = 0
-    max_features = 0.3
+    max_features = 0.5
     for n in[20, 100, 200, 500, 1000, 1200, 1400]:
         start = time.time()
         # tuned_parameters = [{'n_estimators': [200, 500, 1000],
