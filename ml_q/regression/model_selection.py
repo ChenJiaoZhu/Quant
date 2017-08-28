@@ -150,20 +150,25 @@ def etr_search(X_train, X_test, y_train, y_test):
 
     print "R^2 scores calculated on test set:"
     n_jobs = 6
+    n = 1000
     cv = 0
     max_features = 0.5
-    for n in[20, 100, 200, 500, 1000, 1200, 1400]:
-        start = time.time()
-        # tuned_parameters = [{'n_estimators': [200, 500, 1000],
-        #                      'max_features': ['auto', 'log2'],
-        #                      'min_samples_leaf': [1, 10, 50]}]
-        params = {'n_estimators': n, 'max_features': max_features, 'n_jobs': n_jobs}
-        model = ExtraTreesRegressor(n_estimators=n, n_jobs=n_jobs, max_features=max_features)
-        model.fit(X_train, y_train)
-        end = time.time()
+    for depth in [10, 15, 20, 30, 40, 50, 60, 70, 100]:
+        for split in [5, 20, 40, 60, 80, 100, 120, 150, 200]:
+            for leaf in [10, 20, 30, 40, 50, 60, 70, 80, 90]:
+                start = time.time()
+                # tuned_parameters = [{'n_estimators': [200, 500, 1000],
+                #                      'max_features': ['auto', 'log2'],
+                #                      'min_samples_leaf': [1, 10, 50]}]
+                params = {'n_estimators': n, 'max_features': max_features, 'max_depth': depth,
+                          'min_samples_split': split, 'min_samples_leaf':leaf , 'n_jobs': n_jobs}
+                model = ExtraTreesRegressor(n_estimators=n, n_jobs=n_jobs, max_features=max_features,
+                                            max_depth=depth, min_samples_split=split, min_samples_leaf=leaf)
+                model.fit(X_train, y_train)
+                end = time.time()
 
-        print "%0.8f for %r    [X_train.shape=%s, cv=%s]  %0.2f min" % \
-        (model.score(X_test, y_test), params, str(X_train.shape), cv, (end-start)/60)
+                print "%0.8f for %r    [X_train.shape=%s, cv=%s]  %0.2f min" % \
+                (model.score(X_test, y_test), params, str(X_train.shape), cv, (end-start)/60)
 
 
 def rfr_search(X_train, X_test, y_train, y_test):
@@ -173,9 +178,9 @@ def rfr_search(X_train, X_test, y_train, y_test):
     n = 1000
     cv = 0
     max_features = 'sqrt'
-    for depth in [5, 10, 20, 35, 50, 70, 100]:
-        for split in [50, 200, 500, 800, 1000, 1500, 2000]:
-            for leaf in [100, 200, 400, 600, 800]:
+    for depth in [10, 15, 20, 30, 40, 50, 60, 70, 100]:
+        for split in [5, 20, 40, 60, 80, 100, 120, 150, 200]:
+            for leaf in [10, 20, 30, 40, 50, 60, 70, 80, 90]:
                 start = time.time()
                 # tuned_parameters = [{'n_estimators': [200, 500, 1000],
                 #                      'max_features': ['auto', 'log2'],
