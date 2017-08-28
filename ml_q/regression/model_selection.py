@@ -155,7 +155,7 @@ def etr_search(X_train, X_test, y_train, y_test):
     max_features = 0.5
     for depth in [10, 15, 20, 30, 40, 50, 60, 70, 100]:
         for split in [5, 20, 40, 60, 80, 100, 120, 150, 200]:
-            for leaf in [10, 20, 30, 40, 50, 60, 70, 80, 90]:
+            for leaf in  [1, 3, 5, 7, 9]:
                 start = time.time()
                 # tuned_parameters = [{'n_estimators': [200, 500, 1000],
                 #                      'max_features': ['auto', 'log2'],
@@ -180,7 +180,7 @@ def rfr_search(X_train, X_test, y_train, y_test):
     max_features = 'sqrt'
     for depth in [10, 15, 20, 30, 40, 50, 60, 70, 100]:
         for split in [5, 20, 40, 60, 80, 100, 120, 150, 200]:
-            for leaf in [10, 20, 30, 40, 50, 60, 70, 80, 90]:
+            for leaf in [1, 3, 5, 7, 9]:
                 start = time.time()
                 # tuned_parameters = [{'n_estimators': [200, 500, 1000],
                 #                      'max_features': ['auto', 'log2'],
