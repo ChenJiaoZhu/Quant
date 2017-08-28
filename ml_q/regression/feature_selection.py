@@ -84,9 +84,9 @@ def ForwardStepwise(X_train, X_test, y_train, y_test):
             m = '['+i+']' + ' '*(l-len(i))
             if len(selected) == 0:
                 # model = SVR(C=10000.0, gamma=1e-05, kernel='rbf')
-                # model = LinearRegression()
+                model = LinearRegression()
                 # model = Ridge(alpha = 0.09)
-                model = LinearSVR(C=17.0)
+                # model = LinearSVR(C=17.0)
                 model.fit(X_train[[i]], y_train)
                 scr = model.score(X_test[[i]], y_test)
                 if scr > score:
@@ -97,9 +97,9 @@ def ForwardStepwise(X_train, X_test, y_train, y_test):
                       (m, n+1, len(clm), score, str(selected)+'+'+clm[ind], end-begin)
             else:
                 # model = SVR(C=10000.0, gamma=1e-05, kernel='rbf')
-                # model = LinearRegression()
+                model = LinearRegression()
                 # model = Ridge(alpha = 0.09)
-                model = LinearSVR(C=17.0)
+                # model = LinearSVR(C=17.0)
                 x = pd.concat([X_train[selected], X_train[[i]]], axis=1)
                 model.fit(x, y_train)
                 scr = model.score(pd.concat([X_test[selected], X_test[[i]]], axis=1), y_test)
