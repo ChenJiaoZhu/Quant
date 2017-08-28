@@ -81,6 +81,10 @@ SVR  [n_jobs=2]:
 0.98902097 for {'kernel': 'rbf', 'C': 100, 'gamma': 0.01}    [X.shape=(105120, 212), cv=3]  1050 min
 
 ETR:
-0.97273064 for {'n_estimators': 20, 'n_jobs': 1}    [X.shape=(105120, 212), cv=3]  11.30 min
-0.98772289 for {'n_estimators': 20, 'n_jobs': 2}    [X_train.shape=(73584, 212), cv=0]  1.41 min
-0.98785136 for {'n_estimators': 20, 'n_jobs': 2}    [X_train.shape=(73584, 212), cv=0]  1.42 min
+0.97273064 for {'n_estimators': 20, 'max_features': 'auto', 'n_jobs': 1}    [X.shape=(105120, 212), cv=3]  11.30 min
+0.98772289 for {'n_estimators': 20, 'max_features': 'auto', 'n_jobs': 2}    [X_train.shape=(73584, 212), cv=0]  1.41 min
+0.98785136 for {'n_estimators': 20, 'max_features': 'auto', 'n_jobs': 2}    [X_train.shape=(73584, 212), cv=0]  1.42 min
+0.98809660 for {'n_estimators': 20, 'max_features': 'auto', 'n_jobs': 2}    [X_train.shape=(73584, 212), cv=0]  0.70 min
+0.98847332 for {'n_estimators': 100, 'max_features': 'auto', 'n_jobs': 2}    [X_train.shape=(73584, 212), cv=0]  4.09 min
+0.98868019 for {'n_estimators': 200, 'max_features': 'auto', 'n_jobs': 2}    [X_train.shape=(73584, 212), cv=0]  10.81 min
+0.98867222 for {'n_estimators': 500, 'max_features': 'auto', 'n_jobs': 2}    [X_train.shape=(73584, 212), cv=0]  27.77 min
