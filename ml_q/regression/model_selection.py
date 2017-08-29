@@ -161,8 +161,8 @@ def svr_search_main(X_train, X_test, y_train, y_test, g, c):
 
 def parallel(X_train, X_test, y_train, y_test):
     threads = []
-    for c in [1, 10]:
-        for g in [5e-3, 5e-4, 5e-5]:
+    for c in [100, 1000]:
+        for g in [0.1, 0.05, 0.01]:
             t = threading.Thread(target=svr_search_main, args=(X_train, X_test, y_train, y_test, g, c))
             threads.append(t)
     for thread in threads:
