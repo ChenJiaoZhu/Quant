@@ -146,6 +146,21 @@ def rfr_grid_search(X, y):
                   (mean_test_score, params, str(X.shape), cv, (end-start)/60)
 
 
+def svr_search(X_train, X_test, y_train, y_test):
+
+    print "R^2 scores calculated on training set:"
+    for c in [1, 10, 100]:
+        for g in [1e-3, 1e-4, 1e-5]:
+            start = time.time()
+            params = {'kernel': 'rbf', 'gamma': g, 'C': c}
+            model = SVR(C=c, gamma=g, kernel='rbf')
+            model.fit(X_train, y_train)
+            end = time.time()
+
+            print "%0.8f for %r    [X_train.shape=%s]  %0.2f min" % \
+                  (model.score(X_test, y_test), params, str(X_train.shape), (end-start)/60)
+
+
 def etr_search(X_train, X_test, y_train, y_test):
 
     print "R^2 scores calculated on test set:"
@@ -155,7 +170,7 @@ def etr_search(X_train, X_test, y_train, y_test):
     max_features = 0.5
     for depth in [10, 15, 20, 30, 40, 50, 60, 70, 100]:
         for split in [5, 20, 40, 60, 80, 100, 120, 150, 200]:
-            for leaf in  [1, 3, 5, 7, 9]:
+            for leaf in [1, 3, 5, 7, 9]:
                 start = time.time()
                 # tuned_parameters = [{'n_estimators': [200, 500, 1000],
                 #                      'max_features': ['auto', 'log2'],
