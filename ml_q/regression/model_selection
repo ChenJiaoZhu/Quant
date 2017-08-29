@@ -81,10 +81,12 @@ SVR:
 0.98902097 for {'kernel': 'rbf', 'C': 100, 'gamma': 0.01}    [X.shape=(105120, 212), cv=3]  750 min
 
 0.98546646 for {'kernel': 'rbf', 'C': 1, 'gamma': 0.1}    [X_train.shape=(73584, 212)]  41.02 min
+0.98778104 for {'kernel': 'rbf', 'C': 10, 'gamma': 0.1}    [X_train.shape=(73584, 212)]  311.92 min
 0.98693743 for {'kernel': 'rbf', 'C': 1, 'gamma': 0.05}    [X_train.shape=(73584, 212)]  30.58 min
 0.98873651 for {'kernel': 'rbf', 'C': 10, 'gamma': 0.05}    [X_train.shape=(73584, 212)]  111.27 min
 0.98702935 for {'kernel': 'rbf', 'C': 1, 'gamma': 0.01}    [X_train.shape=(73584, 212)]  28.06 min
 0.98855116 for {'kernel': 'rbf', 'C': 10, 'gamma': 0.01}    [X_train.shape=(73584, 212)]  33.51 min
+0.98923646 for {'kernel': 'rbf', 'C': 100, 'gamma': 0.01}    [X_train.shape=(73584, 212)]  200.97 min
 0.98604941 for {'kernel': 'rbf', 'C': 1, 'gamma': 0.005}    [X_train.shape=(73584, 212)]  35.88 min
 0.98819400 for {'kernel': 'rbf', 'C': 10, 'gamma': 0.005}    [X_train.shape=(73584, 212)]  38.88 min
 0.97465364 for {'kernel': 'rbf', 'C': 1, 'gamma': 0.001}    [X_train.shape=(73584, 212)]  100.67 min
