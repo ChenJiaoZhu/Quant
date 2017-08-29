@@ -3,6 +3,7 @@
 # model_selection.py
 
 import time
+import threading
 from sklearn.model_selection import cross_validate
 from sklearn.model_selection import GridSearchCV
 from sklearn.svm import SVR, LinearSVR
@@ -144,6 +145,29 @@ def rfr_grid_search(X, y):
                                               model.cv_results_['params']):
             print "%0.8f for %r    [X.shape=%s, cv=%s]  %0.2f min" % \
                   (mean_test_score, params, str(X.shape), cv, (end-start)/60)
+
+
+def svr_search_main(X_train, X_test, y_train, y_test, g, c):
+
+    start = time.time()
+    params = {'kernel': 'rbf', 'gamma': g, 'C': c}
+    model = SVR(C=c, gamma=g, kernel='rbf')
+    model.fit(X_train, y_train)
+    end = time.time()
+
+    print "%0.8f for %r    [X_train.shape=%s]  %0.2f min" % \
+          (model.score(X_test, y_test), params, str(X_train.shape), (end-start)/60)
+
+
+def parallel(X_train, X_test, y_train, y_test):
+    threads = []
+    for c in [1, 10]:
+        for g in [1e-3, 1e-4, 1e-5]:
+            t = threading.Thread(target=svr_search_main, args=(X_train, X_test, y_train, y_test, g, c))
+            threads.append(t)
+    for thread in threads:
+        thread.start()
+    thread.join()
 
 
 def svr_search(X_train, X_test, y_train, y_test):
