@@ -13,7 +13,7 @@ def forecast(X_train, X_test, y_train, y_test):
               ("Ridge", Ridge(alpha=0.09)),
               ("Lasso", Lasso(alpha=0.0002)),
               ("LSVR", LinearSVR(C=17.0)),
-              ("SVR", SVR(C=10000.0, gamma=0.00001, kernel='rbf')),
+              ("SVR", SVR(C=100.0, gamma=0.01, epsilon=0.1, kernel='rbf')),
               ("ETR", ExtraTreesRegressor(n_estimators=1000, n_jobs=6,
                                           max_features=0.5, max_depth=15,
                                           min_samples_split=5, min_samples_leaf=3)),
