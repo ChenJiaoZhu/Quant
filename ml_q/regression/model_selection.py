@@ -195,7 +195,7 @@ def etr_search(X_train, X_test, y_train, y_test):
     max_score = {}
     max_sc = 0
     for depth in [11, 12, 13, 14, 15, 16, 17, 18, 19]:
-        for split in range(2, 20, 2):
+        for split in range(2, 20):
             for leaf in [1, 2, 3, 4, 5]:
                 start = time.time()
                 # tuned_parameters = [{'n_estimators': [200, 500, 1000],
@@ -227,8 +227,8 @@ def rfr_search(X_train, X_test, y_train, y_test):
     max_features = 0.5
     max_score = {}
     max_sc = 0
-    for depth in range(16, 30, 2):
-        for split in range(2, 20, 2):
+    for depth in range(16, 30, 3):
+        for split in range(2, 20, 3):
             for leaf in [1, 2, 3, 4, 5]:
                 start = time.time()
                 # tuned_parameters = [{'n_estimators': [200, 500, 1000],
