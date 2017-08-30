@@ -1,6 +1,6 @@
 Cross Validation:
 
-一、[normalized X.shape = (105120, 212)]
+一、pre [normalized X.shape = (105120, 212)]
 
 [R^2 on mean test score]
 LR:
@@ -730,3 +730,15 @@ RFR:    ['n_estimators': 1000 [900-1200], 'max_depth': 20 [16-29], 'min_samples_
 0.98841864 for {'n_jobs': 6, 'min_samples_leaf': 3, 'n_estimators': 1000, 'min_samples_split': 5, 'max_features': 'sqrt', 'max_depth': 100}    [X_train.shape=(73584, 212), cv=0]  2.62 min
 0.98842662 for {'n_jobs': 6, 'min_samples_leaf': 5, 'n_estimators': 1000, 'min_samples_split': 5, 'max_features': 'sqrt', 'max_depth': 100}    [X_train.shape=(73584, 212), cv=0]  2.49 min
 'max_depth': 20 [16-29]
+
+
+
+二、final [normalized X.shape = (105120, 212)]
+
+
+
+ETR:    ['n_estimators': 1000 [800-1200], 'max_features': 0.5 [0.3-0.7], 'max_depth': 15 [11-19], 'min_samples_leaf': 3 [1-5],'min_samples_split': 5 [2-19]]
+
+
+
+RFR:    ['n_estimators': 1000 [900-1200], 'max_depth': 20 [16-29], 'min_samples_leaf': 3 [1-5], 'min_samples_split': 5 [2-19]]

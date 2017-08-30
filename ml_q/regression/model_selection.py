@@ -192,9 +192,11 @@ def etr_search(X_train, X_test, y_train, y_test):
     n = 1000
     cv = 0
     max_features = 0.5
-    for depth in [10, 15, 20, 30, 40, 50, 60, 70, 100]:
-        for split in [5, 20, 40, 60, 80, 100, 120, 150, 200]:
-            for leaf in [1, 3, 5, 7, 9]:
+    max_score = {}
+    max_sc = 0
+    for depth in [11, 12, 13, 14, 15, 16, 17, 18, 19]:
+        for split in range(2, 20, 2):
+            for leaf in [1, 2, 3, 4, 5]:
                 start = time.time()
                 # tuned_parameters = [{'n_estimators': [200, 500, 1000],
                 #                      'max_features': ['auto', 'log2'],
@@ -204,10 +206,16 @@ def etr_search(X_train, X_test, y_train, y_test):
                 model = ExtraTreesRegressor(n_estimators=n, n_jobs=n_jobs, max_features=max_features,
                                             max_depth=depth, min_samples_split=split, min_samples_leaf=leaf)
                 model.fit(X_train, y_train)
+                sc = model.score(X_test, y_test)
+                max_score[sc] = params
+                if sc > max_sc:
+                    max_sc = sc
                 end = time.time()
 
                 print "%0.8f for %r    [X_train.shape=%s, cv=%s]  %0.2f min" % \
-                (model.score(X_test, y_test), params, str(X_train.shape), cv, (end-start)/60)
+                (sc, params, str(X_train.shape), cv, (end-start)/60)
+    print "The best model is:\n%0.8f for %r    [X_train.shape=%s, cv=%s]" % \
+          (max_sc, max_score[max_sc], str(X_train.shape), cv)
 
 
 def rfr_search(X_train, X_test, y_train, y_test):
@@ -216,10 +224,12 @@ def rfr_search(X_train, X_test, y_train, y_test):
     n_jobs = 6
     n = 1000
     cv = 0
-    max_features = 'sqrt'
-    for depth in [10, 15, 20, 30, 40, 50, 60, 70, 100]:
-        for split in [5, 20, 40, 60, 80, 100, 120, 150, 200]:
-            for leaf in [1, 3, 5, 7, 9]:
+    max_features = 0.5
+    max_score = {}
+    max_sc = 0
+    for depth in range(16, 30, 2):
+        for split in range(2, 20, 2):
+            for leaf in [1, 2, 3, 4, 5]:
                 start = time.time()
                 # tuned_parameters = [{'n_estimators': [200, 500, 1000],
                 #                      'max_features': ['auto', 'log2'],
@@ -229,7 +239,13 @@ def rfr_search(X_train, X_test, y_train, y_test):
                 model = RandomForestRegressor(n_estimators=n, n_jobs=n_jobs, max_features=max_features,
                                               max_depth=depth, min_samples_split=split, min_samples_leaf=leaf)
                 model.fit(X_train, y_train)
+                sc = model.score(X_test, y_test)
+                max_score[sc] = params
+                if sc > max_sc:
+                    max_sc = sc
                 end = time.time()
 
                 print "%0.8f for %r    [X_train.shape=%s, cv=%s]  %0.2f min" % \
-                (model.score(X_test, y_test), params, str(X_train.shape), cv, (end-start)/60)
+                (sc, params, str(X_train.shape), cv, (end-start)/60)
+    print "The best model is:\n%0.8f for %r    [X_train.shape=%s, cv=%s]" % \
+          (max_sc, max_score[max_sc], str(X_train.shape), cv)
