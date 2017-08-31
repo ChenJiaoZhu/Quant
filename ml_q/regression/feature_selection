@@ -366,7 +366,7 @@ R^2 on training set: 0.998022
 R^2 on test set: 0.988259
 2017-08-30 22:33:48.012000
 
-[Performance ] [212 features]
+[Performance ] [212 features] 8 min
 ETR (): 0.98869343955898914
 
 
@@ -434,7 +434,7 @@ R^2 on training set: 0.998064
 R^2 on test set: 0.988597
 2017-08-30 22:36:46.942000
 
-[Performance ] [212 features]
+[Performance ] [212 features] 60 min
 RFR (): 0.98848056164242294
 SVR (C=100.0, gamma=0.01, epsilon=0.1, kernel='rbf'): 0.98923646
 
