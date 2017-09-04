@@ -1,4 +1,4 @@
-# Coding: UTF-8
+# coding: UTF-8
 
 import MySQLdb
 import time

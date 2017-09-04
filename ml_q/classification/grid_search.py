@@ -1,6 +1,6 @@
 # Coding: UTF-8
 # !/usr/bin/python
-# model_selection.py
+# param_search.py
 
 from __future__ import print_function
 

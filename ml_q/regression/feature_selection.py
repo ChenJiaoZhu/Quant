@@ -1,4 +1,4 @@
-# Coding: UTF-8
+# coding: UTF-8
 
 '''
 This contains some methods for feature selection
@@ -135,12 +135,42 @@ def ForwardStepwise(X_train, X_test, y_train, y_test):
             break
 
 
-from Quant.ml_q import get_data
-X, y, backtest_X, backtest_y_info = get_data.Get_Data(type_y = 'reg')
-X_train, X_test, y_train, y_test = get_data.split_by_weigh(X, y)
+def get_best_subset(X):
 
-ForwardStepwise(X_train, X_test, y_train, y_test)
+    ridge78 = ['Close', '95_ROC', '65_FI', '5_PL', '5_SMA', '5_VAR_RTN', 'High', 'Lag2', 'Low',
+               'Open', '35_MEAN_RTN', '50_CCI', '50_FI', '5_D', 'PHC', '20_ROC', '20_OD',
+               '20_MEAN_RTN', 'Lag4', '5_FI', '20_FI', 'Lag10', '95_EVM', '35_PL', '35_L_BB_Close',
+               '50_PL', '50_L_BB_Close', '35_CCI', '80_PH', '50_EWMA', '5_CCI', '20_J', 'Lag20',
+               'Lag15', 'Lag14', 'Lag11', 'Volume', '20_VH', '80_VC', '50_VC', '80_VAR_RTN',
+               'Lag9', 'Lag6', '95_VH', '50_PH', '5_VH', 'Lag5', 'Lag13', 'Lag3', '65_SKEW_RTN',
+               '95_U_BB_Close', '20_SKEW_RTN', '35_ROC', '65_KURT_RTN', '80_U_BB_Close', '95_PH',
+               'MACD', 'PLC', '65_VL', '80_VH', '50_EVM', '35_EVM', '5_L_BB_Close', '5_U_BB_Close',
+               '65_VC', '95_VD', '80_VD', 'Lag18', 'Lag8', '5_VD', '65_U_BB_Close', '65_PH',
+               '65_J', 'Lag19', '5_KURT_RTN', '20_VL', '35_VC', '20_VC']
+    Ridge_78 = X[ridge78]
 
-X, y = SelectFromPCA(X, y)
-X, y = Norm(X, y)
-X_train, X_test, y_train, y_test = get_data.split_by_weigh(X, y)
+    lasso65 = ['Close', 'Open', '5_MACDH', '20_EVM', '80_EVM', '5_FI', 'Lag1', 'POC', '35_PL',
+               '35_MEAN_RTN', '65_VL', '50_ROC', '20_CCI', '20_OD', '20_VAR_RTN', '35_VAR_RTN',
+               '95_VL', '80_VH', 'Lag9', 'Lag10', '5_K', 'Lag20', '5_VAR_RTN', '35_VL', 'Lag5',
+               '80_FI', '95_D', '35_CCI', '35_FI', '80_RSV', '35_VH', '80_VL', 'Lag6', '50_VH',
+               '95_FI', '5_D', '20_D', '5_VL', 'Lag11', '35_SKEW_RTN', '50_CCI', 'Lag15',
+               '35_U_BB_Close', '95_MEAN_RTN', 'Lag12', '20_SKEW_RTN', '35_D', '20_KURT_RTN',
+               'Lag19', '5_CCI', '95_VD', '65_MEAN_RTN', 'Lag14', '80_SKEW_RTN', '65_RSV', '50_J',
+               'Lag13', '5_VD', 'Lag7', 'Lag8', '5_KURT_RTN', 'Lag16', '5_SKEW_RTN', '5_PL', '80_VC']
+    Lasso_65 = X[lasso65]
+
+    rfr78 = ['Close', 'High', 'Low', 'Open', '5_EWMA', '5_SMA', '5_PC', '5_PH', '5_U_BB_Close',
+             '5_PL', '20_PC', '5_L_BB_Close', '20_SMA', 'Lag1', '80_VL', '20_PL', '50_J', '20_K',
+             '5_VAR_RTN', '20_EVM', '20_VAR_RTN', '35_K', 'Lag20', 'Lag4', 'PLC', 'Lag12', '5_MACDH',
+             'Lag10', '20_D', 'Lag7', 'Lag11', '20_L_BB_Close', '5_FI', 'Lag17', 'Lag9', '50_CCI',
+             'Lag13', '5_ROC', 'Lag3', 'Lag14', 'Lag15', 'Lag8', '5_MEAN_RTN', 'Lag19', '20_SKEW_RTN',
+             'PHC', '20_ROC', 'Lag18', '50_EVM', 'Lag5', '20_FI', 'Lag16', '5_EVM', 'Lag6',
+             '5_KURT_RTN', '20_KURT_RTN', 'Lag2', '5_RSV', '5_SKEW_RTN', '20_MACDH', '95_FI', '35_FI',
+             '95_KURT_RTN', '65_FI', '80_KURT_RTN', '35_VAR_RTN', '65_EVM', '5_VL', '35_KURT_RTN',
+             '35_SKEW_RTN', '20_EWMA', '95_EMA_MACD', '95_SKEW_RTN', '20_MEAN_RTN', '50_KURT_RTN',
+             '95_D', '65_KURT_RTN', '5_EMA_MACD']
+
+    RFR_78 = X[rfr78]
+
+    RFR_48 = X[rfr78[:48]]
+    return Ridge_78, Lasso_65, RFR_78, RFR_48

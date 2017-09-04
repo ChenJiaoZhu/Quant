@@ -1,8 +1,8 @@
-# Coding: UTF-8
+# coding: UTF-8
 # !/usr/bin/python
-# model_selection.py
+# param_search.py
 
-import time
+import time, datetime
 import threading
 from sklearn.model_selection import cross_validate
 from sklearn.model_selection import GridSearchCV
@@ -170,11 +170,24 @@ def parallel(X_train, X_test, y_train, y_test):
     thread.join()
 
 
+def easy_search(X_train, X_test, y_train, y_test, estimator):
+
+    start = time.time()
+    params = estimator[0]
+    model = estimator[1]
+    model.fit(X_train, y_train)
+    end = time.time()
+
+    print "%0.8f for %r    [X_train.shape=%s]  %0.2f s" % \
+          (model.score(X_test, y_test), params, str(X_train.shape), (end-start))
+
+
 def svr_search(X_train, X_test, y_train, y_test):
 
     print "R^2 scores calculated on training set:"
-    for c in [1, 10, 100]:
-        for g in [1e-3, 1e-4, 1e-5]:
+    t = 0
+    for c in [3, 5]:
+        for g in [ 0.0001, 0.0003, 0.0005, 0.0007, 0.0009]:
             start = time.time()
             params = {'kernel': 'rbf', 'gamma': g, 'C': c}
             model = SVR(C=c, gamma=g, kernel='rbf')
@@ -183,20 +196,22 @@ def svr_search(X_train, X_test, y_train, y_test):
 
             print "%0.8f for %r    [X_train.shape=%s]  %0.2f min" % \
                   (model.score(X_test, y_test), params, str(X_train.shape), (end-start)/60)
+            t += (end-start)/60
+    print "Total time: %0.2f h. %s" % (t/60, datetime.datetime.now())
 
 
 def etr_search(X_train, X_test, y_train, y_test):
 
     print "R^2 scores calculated on test set:"
-    n_jobs = 6
-    n = 1000
+    n_jobs = 2
+    n = 600
     cv = 0
-    max_features = 0.5
+    max_features = 'auto'
     max_score = {}
     max_sc = 0
-    for depth in [11, 12, 13, 14, 15, 16, 17, 18, 19]:
-        for split in range(2, 20):
-            for leaf in [1, 2, 3, 4, 5]:
+    for depth in [9]:
+        for split in range(30, 100, 10):
+            for leaf in range(15, 50, 5):
                 start = time.time()
                 # tuned_parameters = [{'n_estimators': [200, 500, 1000],
                 #                      'max_features': ['auto', 'log2'],
@@ -221,15 +236,15 @@ def etr_search(X_train, X_test, y_train, y_test):
 def rfr_search(X_train, X_test, y_train, y_test):
 
     print "R^2 scores calculated on test set:"
-    n_jobs = 6
-    n = 1000
+    n_jobs = 2
+    n = 600
     cv = 0
-    max_features = 0.5
+    max_features = 'auto'
     max_score = {}
     max_sc = 0
-    for depth in range(16, 30, 3):
-        for split in range(2, 20, 3):
-            for leaf in [1, 2, 3, 4, 5]:
+    for depth in [7, 8, 10]:
+        for split in range(10, 51, 10):
+            for leaf in range(15, 50, 7):
                 start = time.time()
                 # tuned_parameters = [{'n_estimators': [200, 500, 1000],
                 #                      'max_features': ['auto', 'log2'],
