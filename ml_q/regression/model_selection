@@ -1,6 +1,6 @@
 Cross Validation:
 
-一、pre [normalized X.shape = (105120, 212)]
+一、single model [normalized X.shape = (105120, 212)]
 
 [R^2 on mean test score]
 LR:
