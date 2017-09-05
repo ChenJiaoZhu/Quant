@@ -184,7 +184,7 @@ def split_x_y(data):
     # get_hs300s_code()
     # download_original_data()
 
-def Get_Data(type_y = 'cls', backtest_date = '2016-08-01'):
+def Get_Data(type_y = 'cls', backtest_date = '2016-08-01', start='2007-01-01'):
     # codes = select_stock()
     codes = [u'000039', u'000060', u'000061', u'000333', u'000503', u'000623',
              u'000625', u'000651', u'000728', u'000738', u'000768', u'000793',
@@ -198,7 +198,7 @@ def Get_Data(type_y = 'cls', backtest_date = '2016-08-01'):
              u'601788', u'601928']
 
     start_time = time.time()
-    original_data = get_original_data(codes, start_time = start_time)
+    original_data = get_original_data(codes, start_time = start_time, start=start)
     datasets = []
     for k, data in enumerate(original_data):
         data = features_extraction(data)

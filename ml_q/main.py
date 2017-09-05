@@ -7,8 +7,7 @@ from Quant.ml_q.regression.ensemble_model import get_model, predict_by_cv
 from Quant.ml_q.regression.ensemble_model import training_model, model_predict
 
 
-if __name__ == "__main__":
-
+def train_model():
     # create the training data and test data
     X, y, backtest_X, backtest_y_info = get_data.Get_Data(type_y='reg')
     X_train_Ridge78, X_train_Lasso65, X_train_RFR78, X_train_RFR48 = get_best_subset(X)
@@ -41,3 +40,8 @@ if __name__ == "__main__":
                               X, backtest_X, y, backtest_y_info["True_reg"], models)
     X_test_pred = pd.DataFrame(pred_list).T
     ensemble.score(X_test_pred, backtest_y_info["True_reg"])
+
+    return models, ensemble, backtest_X, backtest_y_info
+
+if __name__ == "__main__":
+    models, ensemble, backtest_X, backtest_y_info = train_model()
