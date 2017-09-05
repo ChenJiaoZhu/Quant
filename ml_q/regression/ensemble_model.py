@@ -38,10 +38,10 @@ def training_model(X_train_Ridge78, X_train_Lasso65, X_train_RFR78, X_train_RFR4
     t5 = time.time()
     print 'LSVR has fitted. Spent %0.2f s' % (t5 - t4)
 
-    svr = SVR(C=100.0, gamma=0.01, epsilon=0.1, kernel='rbf').fit(X_train, y_train)
-    models['SVR'] = svr
+    # svr = SVR(C=100.0, gamma=0.01, epsilon=0.1, kernel='rbf').fit(X_train, y_train)
+    # models['SVR'] = svr
     t6 = time.time()
-    print 'SVR has fitted. Spent %0.2f min' % ((t6 - t5) / 60)
+    # print 'SVR has fitted. Spent %0.2f min' % ((t6 - t5) / 60)
 
     etr = ExtraTreesRegressor(n_estimators=1000, n_jobs=2, max_features=0.5,
                               max_depth=18, min_samples_split=6,
