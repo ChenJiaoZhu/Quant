@@ -18,7 +18,7 @@ def train_model():
 
     # train each single model
     models = training_model(X_train_Ridge78, X_train_Lasso65, X_train_RFR78, X_train_RFR48,
-                            X, backtest_X, y, backtest_y_info["True_reg"])
+                            X.iloc[X.index>'2010-08-01',:], backtest_X, y, backtest_y_info["True_reg"])
 
     # create the predicted X-train data sets by k-fold prediction of
     # each single model to train the ensemble model
@@ -27,7 +27,7 @@ def train_model():
     pred_train.append(predict_by_cv(X_train_Ridge78, y, estimator=single[1]))
     pred_train.append(predict_by_cv(X_train_Lasso65, y, estimator=single[2]))
     pred_train.append(predict_by_cv(X_train_Ridge78, y, estimator=single[3]))
-    pred_train.append(predict_by_cv(X, y, estimator=single[4]))
+    pred_train.append(predict_by_cv(X.iloc[X.index>'2010-08-01',:], y, estimator=single[4]))
     pred_train.append(predict_by_cv(X_train_RFR78, y, estimator=single[5]))
     pred_train.append(predict_by_cv(X_train_RFR48, y, estimator=single[6]))
     X_train_pred = pd.DataFrame(pred_train).T
