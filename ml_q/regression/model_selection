@@ -2411,3 +2411,50 @@ The best model is:
 The best model is:
 0.98911701 for {'n_jobs': 2, 'min_samples_leaf': 29, 'n_estimators': 600, 'min_samples_split': 50, 'max_features': 'auto', 'max_depth': 7}    [X_train.shape=(73584, 7), cv=0]
 
+
+四、
+Single model test score:
+LR: 0.99540496661
+Ridge: 0.995417350871
+Lasso: 0.995422253968
+LSVR: 0.995456153442
+ETR: 0.995178728981
+RFR: 0.995057516984
+Ensemble: 0.995475408451
+
+Ensenble [cv=5, X_train_pred.shape=(105120, 7)]:
+LR:
+R^2 on training set: 0.99138408
+R^2 on test set: 0.99543810
+2017-09-06 10:39:59.698786
+Ridge:
+R^2 on training set: 0.99138408
+R^2 on test set: 0.99543810
+2017-09-06 10:39:59.722932
+Lasso:
+R^2 on training set: 0.99133086
+R^2 on test set: 0.99542111
+2017-09-06 10:40:01.005095
+LSVR:
+R^2 on training set: 0.99011212
+R^2 on test set: 0.99375917
+2017-09-06 10:40:22.441315
+SVR:
+R^2 on training set: 0.99207833
+R^2 on test set: 0.99525664
+2017-09-06 10:49:57.584356
+ETR:
+R^2 on training set: 0.99360702
+R^2 on test set: 0.99524820
+2017-09-06 10:50:32.954444
+RFR:
+R^2 on training set: 0.99574253
+R^2 on test set: 0.99490672
+2017-09-06 10:53:26.429102
+
+SVR:
+0.99545811 for {'kernel': 'rbf', 'C': 3, 'gamma': 0.0001}    [X_train.shape=(105120, 6)]  11.21 min
+0.99546942 for {'kernel': 'rbf', 'C': 3, 'gamma': 0.0002}    [X_train.shape=(105120, 6)]  4.70 min
+0.99547773 for {'kernel': 'rbf', 'C': 3, 'gamma': 0.0003}    [X_train.shape=(105120, 6)]  4.67 min
+0.99547853 for {'kernel': 'rbf', 'C': 3, 'gamma': 0.0004}    [X_train.shape=(105120, 6)]  4.65 min
+0.99546633 for {'kernel': 'rbf', 'C': 3, 'gamma': 0.0007}    [X_train.shape=(105120, 6)]  4.60 min

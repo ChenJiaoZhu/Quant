@@ -35,11 +35,12 @@ def train_model():
     # train the ensemble model
     ensemble.fit(X_train_pred, y)
 
-    # test
-    pred_list = model_predict(X_test_Ridge78, X_test_Lasso65, X_test_RFR78, X_test_RFR48,
-                              X, backtest_X, y, backtest_y_info["True_reg"], models)
-    X_test_pred = pd.DataFrame(pred_list).T
-    ensemble.score(X_test_pred, backtest_y_info["True_reg"])
+    # test the model performance
+    # svr_search(X_train_pred, X_test_pred, y, backtest_y_info["True_reg"])
+    # pred_list = model_predict(X_test_Ridge78, X_test_Lasso65, X_test_RFR78, X_test_RFR48,
+    #                           X, backtest_X, y, backtest_y_info["True_reg"], models)
+    # X_test_pred = pd.DataFrame(pred_list).T
+    # print 'Ensemble: %s' % ensemble.score(X_test_pred, backtest_y_info["True_reg"])
 
     return models, ensemble, backtest_X, backtest_y_info
 

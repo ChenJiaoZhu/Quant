@@ -187,7 +187,7 @@ def svr_search(X_train, X_test, y_train, y_test):
     print "R^2 scores calculated on training set:"
     t = 0
     for c in [3, 5]:
-        for g in [ 0.0001, 0.0003, 0.0005, 0.0007, 0.0009]:
+        for g in [0.0001, 0.0003, 0.0005, 0.0007, 0.0009]:
             start = time.time()
             params = {'kernel': 'rbf', 'gamma': g, 'C': c}
             model = SVR(C=c, gamma=g, kernel='rbf')

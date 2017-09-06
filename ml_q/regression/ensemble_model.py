@@ -62,6 +62,7 @@ def training_model(X_train_Ridge78, X_train_Lasso65, X_train_RFR78, X_train_RFR4
 
 def model_predict(X_test_Ridge78, X_test_Lasso65, X_test_RFR78, X_test_RFR48,
                    X_train, X_test, y_train, y_test, models):
+
     pred_list = []
     pred_list.append(models['LR'].predict(X_test_Ridge78))
     print 'Single model test score:\nLR: %s' % r2_score(y_test, pred_list[0])
@@ -75,14 +76,14 @@ def model_predict(X_test_Ridge78, X_test_Lasso65, X_test_RFR78, X_test_RFR48,
     pred_list.append(models['LSVR'].predict(X_test_Ridge78))
     print 'LSVR: %s' % r2_score(y_test, pred_list[3])
 
-    pred_list.append(models['SVR'].predict(X_test))
-    print 'SVR: %s' % r2_score(y_test, pred_list[4])
+    # pred_list.append(models['SVR'].predict(X_test))
+    # print 'SVR: %s' % r2_score(y_test, pred_list[4])
 
     pred_list.append(models['ETR'].predict(X_test_RFR78))
-    print 'ETR: %s' % r2_score(y_test, pred_list[5])
+    print 'ETR: %s' % r2_score(y_test, pred_list[4])
 
     pred_list.append(models['RFR'].predict(X_test_RFR48))
-    print 'RFR: %s' % r2_score(y_test, pred_list[6])
+    print 'RFR: %s' % r2_score(y_test, pred_list[5])
 
     return pred_list
 
