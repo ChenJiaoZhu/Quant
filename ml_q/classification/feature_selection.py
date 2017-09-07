@@ -36,6 +36,6 @@ def SelectFromPCA(X, y):
     X_ = pca.transform(X)
     return X_,y
 
-from Quant.ml_q import get_data
-datasets, X, y = get_data.Get_Data(type_y = 'reg')
-X_train, X_test, y_train, y_test = get_data.split_data(X, y)
+from Quant.ml_q import data
+datasets, X, y = data.Get_Data(type_y ='reg')
+X_train, X_test, y_train, y_test = data.split_data(X, y)

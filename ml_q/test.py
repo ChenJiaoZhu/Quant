@@ -15,5 +15,5 @@ t = Test()
 t.me()
 t.check()
 
-from Quant.ml_q import get_data as gd
+from Quant.ml_q import data as gd
 gd.Normalization.fit()

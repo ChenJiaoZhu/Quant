@@ -4,7 +4,7 @@
 import numpy as np
 import pandas as pd
 import datetime, time
-from Quant.ml_q import get_data
+from Quant.ml_q import data
 from Quant.ml_q.regression.feature_selection import get_best_subset
 from Quant.ml_q.regression.param_search import easy_search, svr_search, etr_search, rfr_search
 from sklearn.ensemble import RandomForestRegressor, ExtraTreesRegressor
@@ -144,9 +144,18 @@ def model_test(X_train, X_test, y_train, y_test):
 
 
 def model_selection():
-
-    X, y, backtest_X, backtest_y_info = get_data.Get_Data(type_y='reg')
-    X_train, X_test, y_train, y_test = get_data.split_by_weigh(X, y)
+    codes = [u'000039', u'000060', u'000061', u'000333', u'000503', u'000623',
+             u'000625', u'000651', u'000728', u'000738', u'000768', u'000793',
+             u'000800', u'000858', u'000917', u'002008', u'002065', u'002129',
+             u'002202', u'002230', u'002415', u'002465', u'002673', u'300002',
+             u'300027', u'300058', u'300104', u'300251', u'600037', u'600060',
+             u'600074', u'600104', u'600118', u'600150', u'600196', u'600362',
+             u'600406', u'600518', u'600547', u'600585', u'600588', u'600637',
+             u'600649', u'600703', u'600718', u'600739', u'600804', u'600827',
+             u'600875', u'600895', u'601088', u'601601', u'601607', u'601628',
+             u'601788', u'601928']
+    X, y, backtest_X, backtest_y_info = data.Get_Data(codes, type_y='reg')
+    X_train, X_test, y_train, y_test = data.split_by_weigh(X, y)
     X_train_Ridge78, X_train_Lasso65, X_train_RFR78, X_train_RFR48 = get_best_subset(X_train)
     X_test_Ridge78, X_test_Lasso65, X_test_RFR78, X_test_RFR48 = get_best_subset(X_test)
 

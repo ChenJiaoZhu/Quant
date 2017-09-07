@@ -75,10 +75,10 @@ def select_stock(listing_date='2014-08-01', start='2013-08-01', end='2016-08-01'
     return codes
 
 
-def get_original_data(codes, start_time, start='2007-01-01'):
+def get_original_data(codes, start_time, start_date='2007-01-01'):
     original_data = []
     for k,i in enumerate(codes):
-        sql = "select * from daily_price where code = %s and `date`>'%s' " % (i, start)
+        sql = "select * from daily_price where code = %s and `date`>'%s' " % (i, start_date)
         data = get_sql_data(sql)
         df = pd.DataFrame(list(data), columns=['id', 'Date','Open','Close',
                           'High','Low','Volume','Code']).set_index('Date')
@@ -184,21 +184,11 @@ def split_x_y(data):
     # get_hs300s_code()
     # download_original_data()
 
-def Get_Data(type_y = 'cls', backtest_date = '2016-08-01', start='2007-01-01'):
+def Get_Data(codes, type_y = 'cls', backtest_date = '2016-08-01', start_date='2007-01-01'):
     # codes = select_stock()
-    codes = [u'000039', u'000060', u'000061', u'000333', u'000503', u'000623',
-             u'000625', u'000651', u'000728', u'000738', u'000768', u'000793',
-             u'000800', u'000858', u'000917', u'002008', u'002065', u'002129',
-             u'002202', u'002230', u'002415', u'002465', u'002673', u'300002',
-             u'300027', u'300058', u'300104', u'300251', u'600037', u'600060',
-             u'600074', u'600104', u'600118', u'600150', u'600196', u'600362',
-             u'600406', u'600518', u'600547', u'600585', u'600588', u'600637',
-             u'600649', u'600703', u'600718', u'600739', u'600804', u'600827',
-             u'600875', u'600895', u'601088', u'601601', u'601607', u'601628',
-             u'601788', u'601928']
 
     start_time = time.time()
-    original_data = get_original_data(codes, start_time = start_time, start=start)
+    original_data = get_original_data(codes, start_time = start_time, start_date=start_date)
     datasets = []
     for k, data in enumerate(original_data):
         data = features_extraction(data)
@@ -245,3 +235,33 @@ def split_by_weigh(X, y, w = 0.3):
         X_train, X_test = X[:-l, :].copy(), X[-l:, :].copy()
     y_train, y_test = y[:-l].copy(), y[-l:].copy()
     return X_train, X_test, y_train, y_test
+
+
+class DataHandler(object):
+
+    def __init__(self, events, start_date, symbol_list):
+
+        self.events = events
+        self.start_date = start_date
+        self.continue_backtest = True
+        self.symbol_list = symbol_list
+
+        self._get_data(start_date, symbol_list)
+
+    def _get_data(self, date, symbol):
+
+        X, y, backtest_X, backtest_y_info = Get_Data(symbol, type_y='reg', start_date=date)
+        self.X = X
+        self.y = y
+        self.backtest_X = backtest_X
+        self.backtest_y_info = backtest_y_info
+
+    def update_bars(self):
+        pass
+
+    def get_latest_bar_datetime(self, symbol):
+        pass
+
+    def get_latest_bar_value(self, symbol, type):
+        pass
+

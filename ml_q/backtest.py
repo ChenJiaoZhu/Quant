@@ -24,9 +24,8 @@ class Backtest(object):
     portfolio : (Class) Keeps track of portfolio current and prior positions.
     strategy : (Class) Generates signals based on market data.
     """
-    def __init__(self, symbol_list, initial_capital,
-        heartbeat, start_date, data_handler,
-        execution_handler, portfolio, strategy):
+    def __init__(self, symbol_list, initial_capital, heartbeat, start_date,
+                 data_handler, execution_handler, portfolio, strategy):
 
         self.symbol_list = symbol_list
         self.initial_capital = initial_capital
@@ -50,8 +49,8 @@ class Backtest(object):
         """
         Generates the trading instance objects from their class types.
         """
-        print "Creating DataHandler, Strategy, Portfolio and ExecutionHandler"
-        self.data_handler = self.data_handler_cls(self.events, self.symbol_list)
+        print "Creating DataHandler, Strategy, Portfolio and ExecutionHandler..."
+        self.data_handler = self.data_handler_cls(self.events, self.start_date, self.symbol_list)
         self.strategy = self.strategy_cls(self.data_handler, self.events)
         self.portfolio = self.portfolio_cls(self.data_handler, self.events,
                                             self.start_date, self.initial_capital)
