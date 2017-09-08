@@ -66,7 +66,7 @@ class Backtest(object):
             print i
             # Update the market bars
             if self.data_handler.continue_backtest == True:
-                self.data_handler.update_bars()
+                self.data_handler.update_bars(i)
             else:
                 break
 

@@ -6,6 +6,7 @@ import pandas as pd
 import numpy as np
 import tushare as ts
 from sqlalchemy import create_engine
+from event import MarketEvent
 
 '''
 This download the original stock data from tushare and 
@@ -146,6 +147,8 @@ def pre_processing(data):
 
     data.iloc[:,:-2] = data.iloc[:,:-2].shift(1)
     data.iloc[:, -2:] = data.iloc[:, -2:].shift(-1)
+    data["True_low"] = data["Low"].copy().shift(-1)
+    data["True_high"] = data["High"].copy().shift(-1)
     data.dropna(axis=0, how='any', inplace=True)
     return data
 
@@ -175,8 +178,8 @@ class Normalization(object):
 
 def split_x_y(data):
 
-    y = data[['True_cls','True_reg','Code']].copy()
-    del data["True_cls"], data["True_reg"], data["Code"]
+    y = data[['True_cls', 'True_reg', 'True_low', 'True_high', 'Code']].copy()
+    del data["True_cls"], data["True_reg"], data["True_low"], data["True_high"], data["Code"]
     return data, y
 
 
@@ -243,8 +246,8 @@ class DataHandler(object):
 
         self.events = events
         self.start_date = start_date
-        self.continue_backtest = True
         self.symbol_list = symbol_list
+        self.continue_backtest = True
 
         self._get_data(start_date, symbol_list)
 
@@ -255,13 +258,20 @@ class DataHandler(object):
         self.y = y
         self.backtest_X = backtest_X
         self.backtest_y_info = backtest_y_info
+        self.backtest_period = sorted(set(backtest_X.index))
 
-    def update_bars(self):
-        pass
+    def update_bars(self, day):
 
-    def get_latest_bar_datetime(self, symbol):
-        pass
+        date = self.backtest_period[day-1]
+        self.bar_X = self.backtest_X.loc[date, :]
+        self.bar_y_info = self.backtest_y_info.loc[date, :]
+        market_event = MarketEvent(date)
+        self.events.put(market_event)
 
-    def get_latest_bar_value(self, symbol, type):
-        pass
+        if day == len(self.backtest_period):
+            self.continue_backtest = False
+
+    def get_latest_bar_values(self, index):
+
+        return self.bar_y_info.iloc[index, :]
 

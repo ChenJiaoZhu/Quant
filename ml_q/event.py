@@ -12,9 +12,14 @@ class MarketEvent(Event):
     """
     Handles the event of receiving a new market update with
     corresponding bars.
+
+    Parameters:
+
+    datetime : The timestamp at which the signal was generated.
     """
-    def __init__(self):
+    def __init__(self, datetime):
         self.type = 'MARKET'
+        self.datetime = datetime
 
 
 class SignalEvent(Event):
@@ -29,8 +34,9 @@ class SignalEvent(Event):
     signal_type : 'LONG' or 'SHORT'.
     strength : An adjustment factor "suggestion" used to scale
         quantity at the portfolio level. Useful for pairs strategies.
+    price : The price to buy or sell.
     """
-    def __init__(self, strategy_id, symbol, datetime, signal_type, strength):
+    def __init__(self, strategy_id, symbol, datetime, signal_type, strength, price):
 
         self.type = 'SIGNAL'
         self.strategy_id = strategy_id
@@ -38,6 +44,7 @@ class SignalEvent(Event):
         self.datetime = datetime
         self.signal_type = signal_type
         self.strength = strength
+        self.price = price
 
 
 class OrderEvent(Event):
