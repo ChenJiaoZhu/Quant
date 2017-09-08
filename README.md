@@ -1,2 +1,2 @@
 # Quant
-some quantization strategy
+some quantization strategy based on machine learning modeling
