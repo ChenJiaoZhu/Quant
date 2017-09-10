@@ -122,19 +122,16 @@ class MLModelingStrategy(Strategy):
                 strategy_id = 1
 
                 if sell_threshold < bars['True_high'] and self.bought[symbol] == "LONG":
-                    sig_dir = 'EXIT'
+                    sig_dir = 'SHORT'
                     signal = SignalEvent(strategy_id, symbol, dt, sig_dir, strength, sell_threshold)
                     self.events.put(signal)
-                    self.bought[symbol] = 'EXIT'
+                    self.bought[symbol] = 'OUT'
 
                 if buy_threshold > bars['True_low']:
                     sig_dir = 'LONG'
                     signal = SignalEvent(strategy_id, symbol, dt, sig_dir, strength, buy_threshold)
                     self.events.put(signal)
-                    if sell_threshold < bars['True_high'] and self.bought[symbol] == "LONG":
-                        self.bought[symbol] = 'EXIT, LONG'
-                    else:
-                        self.bought[symbol] = 'LONG'
+                    self.bought[symbol] = 'LONG'
 
 
 if __name__ == "__main__":
@@ -148,14 +145,16 @@ if __name__ == "__main__":
              u'600649', u'600703', u'600718', u'600739', u'600804', u'600827',
              u'600875', u'600895', u'601088', u'601601', u'601607', u'601628',
              u'601788', u'601928']
-    initial_capital = 1000000.0
+    initial_capital = 500000.0
     heartbeat = 0.0
     start_date = '2007-01-01'
+    backtest_date = '2016-08-01'
 
     backtest = Backtest(codes,
                         initial_capital,
                         heartbeat,
                         start_date,
+                        backtest_date,
                         DataHandler,
                         ExecutionHandler,
                         Portfolio,

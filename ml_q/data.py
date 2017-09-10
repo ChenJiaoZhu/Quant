@@ -242,18 +242,20 @@ def split_by_weigh(X, y, w = 0.3):
 
 class DataHandler(object):
 
-    def __init__(self, events, start_date, symbol_list):
+    def __init__(self, events, start_date, backtest_date, symbol_list):
 
         self.events = events
         self.start_date = start_date
+        self.backtest_date = backtest_date
         self.symbol_list = symbol_list
         self.continue_backtest = True
 
-        self._get_data(start_date, symbol_list)
+        self._get_data(start_date, backtest_date, symbol_list)
 
-    def _get_data(self, date, symbol):
+    def _get_data(self, sd, bd, symbol):
 
-        X, y, backtest_X, backtest_y_info = Get_Data(symbol, type_y='reg', start_date=date)
+        X, y, backtest_X, backtest_y_info = Get_Data(symbol, type_y='reg',
+                                                     backtest_date=bd, start_date=sd)
         self.X = X
         self.y = y
         self.backtest_X = backtest_X
