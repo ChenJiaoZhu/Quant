@@ -121,17 +121,20 @@ class MLModelingStrategy(Strategy):
                 strength = 1.0
                 strategy_id = 1
 
+                if sell_threshold < bars['True_high'] and self.bought[symbol] == "LONG":
+                    sig_dir = 'EXIT'
+                    signal = SignalEvent(strategy_id, symbol, dt, sig_dir, strength, sell_threshold)
+                    self.events.put(signal)
+                    self.bought[symbol] = 'EXIT'
+
                 if buy_threshold > bars['True_low']:
                     sig_dir = 'LONG'
                     signal = SignalEvent(strategy_id, symbol, dt, sig_dir, strength, buy_threshold)
                     self.events.put(signal)
-                    self.bought[symbol] = 'LONG'
-
-                if sell_threshold < bars['True_high'] and self.bought[symbol] == "LONG":
-                    sig_dir = 'SHORT'
-                    signal = SignalEvent(strategy_id, symbol, dt, sig_dir, strength, sell_threshold)
-                    self.events.put(signal)
-                    self.bought[symbol] = 'OUT'
+                    if sell_threshold < bars['True_high'] and self.bought[symbol] == "LONG":
+                        self.bought[symbol] = 'EXIT, LONG'
+                    else:
+                        self.bought[symbol] = 'LONG'
 
 
 if __name__ == "__main__":

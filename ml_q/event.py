@@ -31,7 +31,7 @@ class SignalEvent(Event):
     strategy_id : The unique ID of the strategy sending the signal.
     symbol : The ticker symbol, e.g. '000001'.
     datetime : The timestamp at which the signal was generated.
-    signal_type : 'LONG' or 'SHORT'.
+    signal_type : 'LONG' or 'OUT' or 'EXIT'.
     strength : An adjustment factor "suggestion" used to scale
         quantity at the portfolio level. Useful for pairs strategies.
     price : The price to buy or sell.
