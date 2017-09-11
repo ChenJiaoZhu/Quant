@@ -17,6 +17,7 @@ class MarketEvent(Event):
 
     datetime : The timestamp at which the signal was generated.
     """
+
     def __init__(self, datetime):
         self.type = 'MARKET'
         self.datetime = datetime
@@ -31,11 +32,12 @@ class SignalEvent(Event):
     strategy_id : The unique ID of the strategy sending the signal.
     symbol : The ticker symbol, e.g. '000001'.
     datetime : The timestamp at which the signal was generated.
-    signal_type : 'LONG' or 'SHORT'.
+    signal_type : 'LONG' or 'EXIT'.
     strength : An adjustment factor "suggestion" used to scale
         quantity at the portfolio level. Useful for pairs strategies.
     price : The price to buy or sell.
     """
+
     def __init__(self, strategy_id, symbol, datetime, signal_type, strength, price):
 
         self.type = 'SIGNAL'
@@ -54,25 +56,29 @@ class OrderEvent(Event):
     Parameters:
 
     symbol : The ticker symbol, e.g. '000001'.
+    datetime : The timestamp at which the order was generated.
     order_type : 'MKT' or 'LMT' for Market or Limit.
     quantity : Non-negative integer for quantity.
-    direction : 'BUY' or 'SELL' for long or short.
+    price : The price to buy or sell.
+    direction : 'BUY' or 'SELL' for long or exit.
     """
 
-    def __init__(self, symbol, order_type, quantity, direction):
+    def __init__(self, symbol, datetime, order_type, quantity, price, direction):
 
         self.type = 'ORDER'
         self.symbol = symbol
+        self.datetime = datetime
         self.order_type = order_type
         self.quantity = quantity
+        self.price = price
         self.direction = direction
 
     def print_order(self):
         """
         Outputs the values within the Order.
         """
-        print "Order: Symbol=%s, Type=%s, Quantity=%s, Direction=%s" % \
-            (self.symbol, self.order_type, self.quantity, self.direction)
+        print "Order: Symbol=%s, Type=%s, Quantity=%s, price=%s, Direction=%s" % \
+            (self.symbol, self.order_type, self.quantity, self.price, self.direction)
 
 
 class FillEvent(Event):
@@ -104,7 +110,9 @@ class FillEvent(Event):
         self.price = price
 
         # Calculate commission
-        if commission is None:
-            self.commission = self.price * self.quantity * 0.003
+        if commission is None and direction == 'BUY':
+            self.commission = max(self.price * self.quantity * 0.003, 5.0)
+        elif commission is None and direction == 'SELL':
+            self.commission = max(self.price * self.quantity * 0.004, 5.0)
         else:
             self.commission = commission

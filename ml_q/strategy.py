@@ -1,15 +1,15 @@
 # coding: UTF-8
 
 import pandas as pd
-from event import SignalEvent
 from Quant.ml_q.regression.feature_selection import get_best_subset
 from Quant.ml_q.regression.ensemble_model import training_model
 from Quant.ml_q.regression.ensemble_model import get_model, predict_by_cv
 
-from Quant.ml_q.data import DataHandler
-from Quant.ml_q.backtest import Backtest
-from Quant.ml_q.execution import ExecutionHandler
-from Quant.ml_q.portfolio import Portfolio
+from event import SignalEvent
+from data import DataHandler
+from backtest import Backtest
+from execution import ExecutionHandler
+from portfolio import Portfolio
 
 
 class Strategy(object):
@@ -122,7 +122,7 @@ class MLModelingStrategy(Strategy):
                 strategy_id = 1
 
                 if sell_threshold < bars['True_high'] and self.bought[symbol] == "LONG":
-                    sig_dir = 'SHORT'
+                    sig_dir = 'EXIT'
                     signal = SignalEvent(strategy_id, symbol, dt, sig_dir, strength, sell_threshold)
                     self.events.put(signal)
                     self.bought[symbol] = 'OUT'
