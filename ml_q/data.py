@@ -149,6 +149,7 @@ def pre_processing(data):
     data.iloc[:, -2:] = data.iloc[:, -2:].shift(-1)
     data["True_low"] = data["Low"].copy().shift(-1)
     data["True_high"] = data["High"].copy().shift(-1)
+    data["True_close"] = data["Close"].copy().shift(-1)
     data.dropna(axis=0, how='any', inplace=True)
     return data
 
@@ -178,8 +179,9 @@ class Normalization(object):
 
 def split_x_y(data):
 
-    y = data[['True_cls', 'True_reg', 'True_low', 'True_high', 'Code']].copy()
-    del data["True_cls"], data["True_reg"], data["True_low"], data["True_high"], data["Code"]
+    y = data[['True_cls', 'True_reg', 'True_low', 'True_high', 'True_close', 'Code']].copy()
+    del data["True_cls"], data["True_reg"], data["True_low"], data["True_high"], \
+        data["True_close"], data["Code"]
     return data, y
 
 
@@ -262,18 +264,27 @@ class DataHandler(object):
         self.backtest_y_info = backtest_y_info
         self.backtest_period = sorted(set(backtest_X.index))
 
-    def update_bars(self, day):
+    def update_bars(self, day, portfolio):
 
-        date = self.backtest_period[day-1]
-        self.bar_X = self.backtest_X.loc[date, :]
-        self.bar_y_info = self.backtest_y_info.loc[date, :]
-        market_event = MarketEvent(date)
-        self.events.put(market_event)
+        if day < len(self.backtest_period):
+            date = self.backtest_period[day-1]
+            self.bar_X = self.backtest_X.loc[date, :]
+            self.bar_y_info = self.backtest_y_info.loc[date, :]
+            market_event = MarketEvent(date)
+            self.events.put(market_event)
 
-        if day == len(self.backtest_period):
+        elif day == len(self.backtest_period):
+            date = self.backtest_period[day-1]
+            self.bar_X = self.backtest_X.loc[date, :]
+            self.bar_y_info = self.backtest_y_info.loc[date, :]
+            portfolio.sell_all_holdings(date)
             self.continue_backtest = False
 
     def get_latest_bar_values(self, index):
-
         return self.bar_y_info.iloc[index, :]
 
+    def get_latest_bar_value(self, symbol, type):
+        copy = self.bar_y_info.copy()
+        copy.set_index('Code', inplace=True)
+        info = copy.loc[symbol, :]
+        return info[type]

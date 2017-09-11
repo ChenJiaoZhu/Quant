@@ -70,7 +70,7 @@ class Backtest(object):
             print i
             # Update the market bars
             if self.data_handler.continue_backtest == True:
-                self.data_handler.update_bars(i)
+                self.data_handler.update_bars(i, self.portfolio)
             else:
                 break
 
@@ -79,7 +79,7 @@ class Backtest(object):
                 try:
                     event = self.events.get(False)
                 except queue.Empty:
-                    self.portfolio.update_timeindex(event)
+                    self.portfolio.update_timeindex()
                     break
                 else:
                     if event is not None:
@@ -93,6 +93,7 @@ class Backtest(object):
                         elif event.type == 'ORDER':
                             self.orders += 1
                             self.execution_handler.execute_order(event)
+                            self.execution_handler.update_order(event)
 
                         elif event.type == 'FILL':
                             self.fills += 1
