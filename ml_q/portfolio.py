@@ -124,7 +124,6 @@ class Portfolio(object):
             fill_dir = -1
 
         self.current_positions[fill.symbol] += fill_dir*fill.quantity
-        self.current_positions['datetime'] = fill.timeindex
 
     def update_holdings_from_fill(self, fill):
         """
@@ -144,15 +143,15 @@ class Portfolio(object):
         self.current_holdings['commission'] += fill.commission
         self.current_holdings['cash'] += (cost - fill.commission)
 
-        self.current_holdings['datetime'] = fill.timeindex
-
     def update_timeindex(self, day):
         """
         Adds a complete performance record of one day to the performance matrix.
-        This contains calculating the total market value of this day.
+        This also contains calculating the total market value of this day.
         """
+        self.current_positions['datetime'] = self.bars.date
         self.all_positions.append(self.current_positions.copy())
 
+        self.current_holdings['datetime'] = self.bars.date
         self.all += (self.buy + self.sell)
         self.current_holdings['buy_times'] = self.buy
         self.current_holdings['sell_times'] = self.sell
@@ -169,8 +168,8 @@ class Portfolio(object):
         # Append the current holdings
         self.all_holdings.append(self.current_holdings.copy())
 
-        print 'Day %s [%s]: buy %s, sell %s.' % (day, self.current_holdings['datetime'],
-                                                 self.buy, self.sell)
+        print 'Day %s[%s]: buy %s, sell %s.' % (day, self.current_holdings['datetime'],
+                                                self.buy, self.sell)
 
     def sell_all_holdings(self, date):
         """
@@ -194,4 +193,5 @@ class Portfolio(object):
         self.equity_curve = curve
 
         positions = pd.DataFrame(self.all_positions)
+        positions.set_index('datetime', inplace=True)
         self.positions = positions

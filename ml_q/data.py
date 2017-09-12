@@ -271,20 +271,20 @@ class DataHandler(object):
         portfolio.buy = 0
         portfolio.sell = 0
 
-        date = self.backtest_period[day-1]
-        self.bar_X = self.backtest_X.loc[date, :]
-        self.bar_y_info = self.backtest_y_info.loc[date, :]
+        self.date = self.backtest_period[day-1]
+        self.bar_X = self.backtest_X.loc[self.date, :]
+        self.bar_y_info = self.backtest_y_info.loc[self.date, :]
 
         for i in range(len(self.bar_y_info)):
             y = self.bar_y_info.iloc[i, :]
             self.latest_bars.loc[y['Code'], :] = y
 
         if day < len(self.backtest_period):
-            market_event = MarketEvent(date)
+            market_event = MarketEvent(self.date)
             self.events.put(market_event)
 
         elif day == len(self.backtest_period):
-            portfolio.sell_all_holdings(date)
+            portfolio.sell_all_holdings(self.date)
             self.continue_backtest = False
 
     def get_latest_bar_values(self, index):
