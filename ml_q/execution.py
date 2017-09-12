@@ -5,7 +5,7 @@ from event import FillEvent
 
 class ExecutionHandler(object):
     """
-    Class to execute the trading.
+    Class to execute the trading and generate fill event for back test.
 
     Parameters:
 

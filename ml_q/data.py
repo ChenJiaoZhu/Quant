@@ -263,20 +263,24 @@ class DataHandler(object):
         self.backtest_X = backtest_X
         self.backtest_y_info = backtest_y_info
         self.backtest_period = sorted(set(backtest_X.index))
+        self.latest_bars = pd.DataFrame(0.0, index=self.symbol_list,
+                                        columns=backtest_y_info.columns)
 
     def update_bars(self, day, portfolio):
 
+        date = self.backtest_period[day-1]
+        self.bar_X = self.backtest_X.loc[date, :]
+        self.bar_y_info = self.backtest_y_info.loc[date, :]
+
+        for i in range(len(self.bar_y_info)):
+            y = self.bar_y_info.iloc[i, :]
+            self.latest_bars.loc[y['Code'], :] = y
+
         if day < len(self.backtest_period):
-            date = self.backtest_period[day-1]
-            self.bar_X = self.backtest_X.loc[date, :]
-            self.bar_y_info = self.backtest_y_info.loc[date, :]
             market_event = MarketEvent(date)
             self.events.put(market_event)
 
         elif day == len(self.backtest_period):
-            date = self.backtest_period[day-1]
-            self.bar_X = self.backtest_X.loc[date, :]
-            self.bar_y_info = self.backtest_y_info.loc[date, :]
             portfolio.sell_all_holdings(date)
             self.continue_backtest = False
 
@@ -284,7 +288,4 @@ class DataHandler(object):
         return self.bar_y_info.iloc[index, :]
 
     def get_latest_bar_value(self, symbol, type):
-        copy = self.bar_y_info.copy()
-        copy.set_index('Code', inplace=True)
-        info = copy.loc[symbol, :]
-        return info[type]
+        return self.latest_bars.loc[symbol, type]

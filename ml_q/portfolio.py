@@ -158,9 +158,10 @@ class Portfolio(object):
         self.current_holdings['total'] = self.current_holdings['cash']
         for s in self.symbol_list:
             # Approximates the real value
-            market_value = self.current_positions[s] * \
-                self.bars.get_latest_bar_value(s, 'True_close')
-            self.current_holdings['total'] += market_value
+            if self.current_positions[s] > 0:
+                market_value = self.current_positions[s] * \
+                    self.bars.get_latest_bar_value(s, 'True_close')
+                self.current_holdings['total'] += market_value
 
         # Append the current holdings
         self.all_holdings.append(self.current_holdings.copy())
