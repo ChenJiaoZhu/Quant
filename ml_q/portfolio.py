@@ -1,6 +1,5 @@
 # coding: UTF-8
 
-import pandas as pd
 from event import OrderEvent, SignalEvent
 
 
@@ -174,13 +173,3 @@ class Portfolio(object):
                 price = self.bars.get_latest_bar_value(s, 'True_close')
                 sell_all_event = SignalEvent(1, s, date, 'EXIT', 1.0, price)
                 self.events.put(sell_all_event)
-
-    def create_equity_curve_dataframe(self):
-        """
-        Creates a pandas DataFrame from the all_holdings list of dictionaries.
-        """
-        curve = pd.DataFrame(self.all_holdings)
-        curve.set_index('datetime', inplace=True)
-        curve['returns'] = curve['total'].pct_change()
-        curve['equity_curve'] = (1.0 + curve['returns']).cumprod()
-        self.equity_curve = curve
