@@ -25,9 +25,9 @@ class Backtest(object):
     portfolio : (Class) Keeps track of portfolio current and prior positions.
     strategy : (Class) Generates signals based on market data.
     """
-    def __init__(self, symbol_list, initial_capital, heartbeat,
-                 start_date, backtest_date, data_handler,
-                 execution_handler, portfolio, strategy):
+    def __init__(self, symbol_list, initial_capital, heartbeat, start_date,
+                 backtest_date, data_handler, execution_handler, portfolio,
+                 strategy, threshold):
 
         self.symbol_list = symbol_list
         self.initial_capital = initial_capital
@@ -39,6 +39,7 @@ class Backtest(object):
         self.execution_handler_cls = execution_handler
         self.portfolio_cls = portfolio
         self.strategy_cls = strategy
+        self.threshold = threshold
 
         self.events = queue.Queue()
 
@@ -55,7 +56,7 @@ class Backtest(object):
         print "Creating DataHandler, Strategy, Portfolio and ExecutionHandler..."
         self.data_handler = self.data_handler_cls(self.events, self.start_date,
                                                   self.backtest_date, self.symbol_list)
-        self.strategy = self.strategy_cls(self.data_handler, self.events)
+        self.strategy = self.strategy_cls(self.data_handler, self.events, self.threshold)
         self.portfolio = self.portfolio_cls(self.data_handler, self.events, self.start_date,
                                             self.backtest_date, self.initial_capital)
         self.execution_handler = self.execution_handler_cls(self.events)
@@ -67,7 +68,6 @@ class Backtest(object):
         i = 0
         while True:
             i += 1
-            print i
             # Update the market bars
             if self.data_handler.continue_backtest == True:
                 self.data_handler.update_bars(i, self.portfolio)
@@ -79,7 +79,7 @@ class Backtest(object):
                 try:
                     event = self.events.get(False)
                 except queue.Empty:
-                    self.portfolio.update_timeindex()
+                    self.portfolio.update_timeindex(i)
                     break
                 else:
                     if event is not None:
@@ -111,7 +111,7 @@ class Backtest(object):
         # stats = self.portfolio.output_summary_stats()
 
         print "Creating equity curve..."
-        print self.portfolio.equity_curve.tail(10)
+        print self.portfolio.equity_curve.iloc[-1, :]
         # pprint.pprint(stats)
 
         print "Signals: %s" % self.signals

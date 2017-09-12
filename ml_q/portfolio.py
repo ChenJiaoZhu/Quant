@@ -26,7 +26,7 @@ class Portfolio(object):
     backtest_date : The start datetime of back-test.
     initial_capital : The starting capital in RMB.
     """
-    def __init__(self, bars, events, start_date, backtest_date, initial_capital=100000.0):
+    def __init__(self, bars, events, start_date, backtest_date, initial_capital=500000.0):
 
         self.bars = bars
         self.events = events
@@ -35,11 +35,15 @@ class Portfolio(object):
         self.backtest_date = backtest_date
         self.initial_capital = initial_capital
 
+        self.buy = 0
+        self.sell = 0
+        self.all = 0
+
         self.all_positions = self._construct_all_positions()
-        self.current_positions = dict((s, 0) for s in self.symbol_list)
+        self.current_positions = self.all_positions[0].copy()
 
         self.all_holdings = self._construct_all_holdings()
-        self.current_holdings = self._construct_current_holdings()
+        self.current_holdings = self.all_holdings[0].copy()
 
     def _construct_all_positions(self):
         """
@@ -60,18 +64,10 @@ class Portfolio(object):
         d['cash'] = self.initial_capital
         d['commission'] = 0.0
         d['total'] = self.initial_capital
+        d['buy_times'] = 0
+        d['sell_times'] = 0
+        d['total_times'] = 0
         return [d]
-
-    def _construct_current_holdings(self):
-        """
-        This constructs the dictionary which will hold the instantaneous
-        value of the portfolio across all symbols.
-        """
-        d = dict((s, 0.0) for s in self.symbol_list)
-        d['cash'] = self.initial_capital
-        d['commission'] = 0.0
-        d['total'] = self.initial_capital
-        return d
 
     def update_signal(self, event):
         """
@@ -136,8 +132,10 @@ class Portfolio(object):
         """
         fill_dir = 0
         if fill.direction == 'BUY':
+            self.buy += 1
             fill_dir = -1
         if fill.direction == 'SELL':
+            self.sell += 1
             fill_dir = 1
 
         cost = fill_dir * fill.price * fill.quantity
@@ -148,12 +146,17 @@ class Portfolio(object):
 
         self.current_holdings['datetime'] = fill.timeindex
 
-    def update_timeindex(self):
+    def update_timeindex(self, day):
         """
         Adds a complete performance record of one day to the performance matrix.
         This contains calculating the total market value of this day.
         """
         self.all_positions.append(self.current_positions.copy())
+
+        self.all += (self.buy + self.sell)
+        self.current_holdings['buy_times'] = self.buy
+        self.current_holdings['sell_times'] = self.sell
+        self.current_holdings['total_times'] = self.all
 
         self.current_holdings['total'] = self.current_holdings['cash']
         for s in self.symbol_list:
@@ -165,6 +168,9 @@ class Portfolio(object):
 
         # Append the current holdings
         self.all_holdings.append(self.current_holdings.copy())
+
+        print 'Day %s [%s]: buy %s, sell %s.' % (day, self.current_holdings['datetime'],
+                                                 self.buy, self.sell)
 
     def sell_all_holdings(self, date):
         """
@@ -183,5 +189,9 @@ class Portfolio(object):
         curve = pd.DataFrame(self.all_holdings)
         curve.set_index('datetime', inplace=True)
         curve['returns'] = curve['total'].pct_change()
+        curve.loc[curve.index[0], 'returns'] = 0.0
         curve['equity_curve'] = (1.0 + curve['returns']).cumprod()
         self.equity_curve = curve
+
+        positions = pd.DataFrame(self.all_positions)
+        self.positions = positions

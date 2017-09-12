@@ -28,12 +28,14 @@ class MLModelingStrategy(Strategy):
 
     bars : The DataHandler object that provides bar information
     events : The Event Queue object.
+    threshold : One trade return of each stock which decides the price to buy or sell.
     """
-    def __init__(self, bars, events):
+    def __init__(self, bars, events, threshold=0.02):
 
         self.bars = bars
         self.symbol_list = self.bars.symbol_list
         self.events = events
+        self.threshold = threshold
 
         # Trains the prediction models.
         self.models, self.ensemble_model = self._train_model()
@@ -50,7 +52,8 @@ class MLModelingStrategy(Strategy):
 
         # Trains each single model
         models = training_model(X_train_Ridge78, X_train_Lasso65, X_train_RFR78, X_train_RFR48,
-                                self.bars.X, self.bars.backtest_X, self.bars.y, self.bars.backtest_y_info["True_reg"])
+                                self.bars.X, self.bars.backtest_X, self.bars.y,
+                                self.bars.backtest_y_info["True_reg"])
 
         # Creates the predicted X-train data sets by k-fold prediction of
         # Each single model to train the ensemble model
@@ -86,7 +89,7 @@ class MLModelingStrategy(Strategy):
             bought[s] = 'OUT'
         return bought
 
-    def calculate_signals(self, event, threshold=0.01, deviation=0.0, fee=0.003):
+    def calculate_signals(self, event, deviation=0.0, fee=0.003):
         """
         Generates a new set of signals based on machine
         learning models.
@@ -112,8 +115,8 @@ class MLModelingStrategy(Strategy):
             y_pred = self.ensemble_model.predict(X_test_pred)
 
             for i, pred in enumerate(y_pred):
-                buy_threshold = ((pred * (1.0 + deviation)) / (1.0 + threshold)) / (1.0 + fee)
-                sell_threshold = ((pred * (1.0 + deviation)) * (1.0 + threshold)) / (1.0 - fee - 0.001)
+                buy_threshold = ((pred * (1.0 + deviation)) / (1.0 + self.threshold)) / (1.0 + fee)
+                sell_threshold = ((pred * (1.0 + deviation)) * (1.0 + self.threshold)) / (1.0 - fee - 0.001)
                 bars = self.bars.get_latest_bar_values(i)
                 symbol = bars['Code']
                 dt = bars.name
@@ -145,10 +148,11 @@ if __name__ == "__main__":
              u'600649', u'600703', u'600718', u'600739', u'600804', u'600827',
              u'600875', u'600895', u'601088', u'601601', u'601607', u'601628',
              u'601788', u'601928']
-    initial_capital = 500000.0
+    initial_capital = 300000.0
     heartbeat = 0.0
     start_date = '2007-01-01'
     backtest_date = '2016-08-01'
+    threshold = 0.02
 
     backtest = Backtest(codes,
                         initial_capital,
@@ -158,6 +162,7 @@ if __name__ == "__main__":
                         DataHandler,
                         ExecutionHandler,
                         Portfolio,
-                        MLModelingStrategy)
+                        MLModelingStrategy,
+                        threshold)
 
     backtest.simulate_trading()

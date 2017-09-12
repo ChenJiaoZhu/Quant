@@ -268,6 +268,9 @@ class DataHandler(object):
 
     def update_bars(self, day, portfolio):
 
+        portfolio.buy = 0
+        portfolio.sell = 0
+
         date = self.backtest_period[day-1]
         self.bar_X = self.backtest_X.loc[date, :]
         self.bar_y_info = self.backtest_y_info.loc[date, :]
