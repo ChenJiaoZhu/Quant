@@ -77,7 +77,7 @@ class OrderEvent(Event):
         """
         Outputs the values within the Order.
         """
-        print "Order: Symbol=%s, Type=%s, Quantity=%s, price=%s, Direction=%s" % \
+        print "Order: Symbol=%s, Type=%s, Quantity=%s, Price=%s, Direction=%s" % \
             (self.symbol, self.order_type, self.quantity, self.price, self.direction)
 
 
