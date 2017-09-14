@@ -112,9 +112,9 @@ class MLModelingStrategy(Strategy):
             X_test_pred = pd.DataFrame(pred_list).T
 
             # Predicts the final results through fitting the new X to parametrised ensemble model
-            y_pred = self.ensemble_model.predict(X_test_pred)
+            self.y_pred = self.ensemble_model.predict(X_test_pred)
 
-            for i, pred in enumerate(y_pred):
+            for i, pred in enumerate(self.y_pred):
                 buy_threshold = ((pred * (1.0 + deviation)) / (1.0 + self.threshold)) / (1.0 + fee)
                 sell_threshold = ((pred * (1.0 + deviation)) * (1.0 + self.threshold)) / (1.0 - fee - 0.001)
                 bars = self.bars.get_latest_bar_values(i)
@@ -152,7 +152,7 @@ if __name__ == "__main__":
     heartbeat = 0.0
     start_date = '2007-01-01'
     backtest_date = '2016-08-01'
-    threshold = 0.02
+    threshold = 0.03
 
     backtest = Backtest(codes,
                         initial_capital,
