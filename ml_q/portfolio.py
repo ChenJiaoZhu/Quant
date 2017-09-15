@@ -42,6 +42,9 @@ class Portfolio(object):
         self.all_positions = self._construct_all_positions()
         self.current_positions = self.all_positions[0].copy()
 
+        self.all_prices = self._construct_all_prices()
+        self.current_prices = self.all_prices[0].copy()
+
         self.all_holdings = self._construct_all_holdings()
         self.current_holdings = self.all_holdings[0].copy()
 
@@ -51,6 +54,15 @@ class Portfolio(object):
         to determine when the time index will begin.
         """
         d = dict((s, 0) for s in self.symbol_list)
+        d['datetime'] = self.backtest_date
+        return [d]
+
+    def _construct_all_prices(self):
+        """
+        Constructs the prices list using the backtest_date object
+        to determine when the time index will begin.
+        """
+        d = dict([(s+'-', 0) for s in self.symbol_list] + [(s+'+', 0) for s in self.symbol_list])
         d['datetime'] = self.backtest_date
         return [d]
 
@@ -112,6 +124,7 @@ class Portfolio(object):
         """
         if event.type == 'FILL':
             self.update_positions_from_fill(event)
+            self.update_prices_from_fill(event)
             self.update_holdings_from_fill(event)
 
     def update_positions_from_fill(self, fill):
@@ -125,6 +138,18 @@ class Portfolio(object):
             fill_dir = -1
 
         self.current_positions[fill.symbol] += fill_dir*fill.quantity
+
+    def update_prices_from_fill(self, fill):
+        """
+        Takes a Fill object and updates the prices matrix to reflect the buy or sell price.
+        """
+        if fill.direction == 'BUY':
+            fill_dir = -1
+            self.current_prices[fill.symbol+'-'] = fill_dir * fill.price
+
+        if fill.direction == 'SELL':
+            fill_dir = 1
+            self.current_prices[fill.symbol+'+'] = fill_dir * fill.price
 
     def update_holdings_from_fill(self, fill):
         """
@@ -151,6 +176,9 @@ class Portfolio(object):
         """
         self.current_positions['datetime'] = self.bars.date
         self.all_positions.append(self.current_positions.copy())
+
+        self.current_prices['datetime'] = self.bars.date
+        self.all_prices.append(self.current_prices.copy())
 
         self.current_holdings['datetime'] = self.bars.date
         self.all += (self.buy + self.sell)
@@ -206,3 +234,8 @@ class Portfolio(object):
         positions = pd.DataFrame(self.all_positions)
         positions.set_index('datetime', inplace=True)
         self.positions = positions
+
+        prices = pd.DataFrame(self.all_prices)
+        prices.set_index('datetime', inplace=True)
+        self.prices = prices
+        
