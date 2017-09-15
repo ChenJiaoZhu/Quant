@@ -191,6 +191,13 @@ class Portfolio(object):
         """
         curve = pd.DataFrame(self.all_holdings)
         curve.set_index('datetime', inplace=True)
+
+        curve_symbols = curve[self.symbol_list]
+        lists = ['buy_times', 'sell_times', 'hold', 'total_times',
+                 'cash', 'commission', 'total']
+        curve_lists = curve[lists]
+        curve = pd.concat([curve_symbols, curve_lists], axis=1)
+
         curve['returns'] = curve['total'].pct_change()
         curve.loc[curve.index[0], 'returns'] = 0.0
         curve['equity_curve'] = (1.0 + curve['returns']).cumprod()
