@@ -238,4 +238,3 @@ class Portfolio(object):
         prices = pd.DataFrame(self.all_prices)
         prices.set_index('datetime', inplace=True)
         self.prices = prices
-        

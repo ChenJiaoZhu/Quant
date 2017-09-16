@@ -72,7 +72,11 @@ def select_stock(listing_date='2014-08-01', start='2013-08-01', end='2016-08-01'
         if volume_df[i].mean() >= vol_desc['33%'] and volume_df[i].mean() <= vol_desc['66%']:
             volume_code.append(i)
 
-    codes = sorted(list(set(price_code) & set(volume_code)))
+    sql = 'select code from daily_price where `date`>"2017-07-25"'
+    co = get_sql_data(sql)
+    co = set([i[0] for i in co])
+
+    codes = sorted(list(set(price_code) & set(volume_code) & co))
     return codes
 
 
@@ -149,6 +153,7 @@ def pre_processing(data):
     data.iloc[:, -2:] = data.iloc[:, -2:].shift(-1)
     data["True_low"] = data["Low"].copy().shift(-1)
     data["True_high"] = data["High"].copy().shift(-1)
+    data["True_open"] = data["Open"].copy().shift(-1)
     data["True_close"] = data["Close"].copy().shift(-1)
     data.dropna(axis=0, how='any', inplace=True)
     return data
@@ -179,9 +184,10 @@ class Normalization(object):
 
 def split_x_y(data):
 
-    y = data[['True_cls', 'True_reg', 'True_low', 'True_high', 'True_close', 'Code']].copy()
+    y = data[['True_cls', 'True_reg', 'True_low', 'True_high', 'True_open',
+              'True_close', 'Code']].copy()
     del data["True_cls"], data["True_reg"], data["True_low"], data["True_high"], \
-        data["True_close"], data["Code"]
+        data['True_open'], data["True_close"], data["Code"]
     return data, y
 
 
@@ -270,6 +276,67 @@ class DataHandler(object):
 
         portfolio.buy = 0
         portfolio.sell = 0
+        portfolio.current_prices = dict([(s+'-', 0) for s in self.symbol_list] +
+                                        [(s+'+', 0) for s in self.symbol_list])
+
+        self.date = self.backtest_period[day-1]
+        self.bar_X = self.backtest_X.loc[self.date, :]
+        self.bar_y_info = self.backtest_y_info.loc[self.date, :]
+
+        for i in range(len(self.bar_y_info)):
+            y = self.bar_y_info.iloc[i, :]
+            self.latest_bars.loc[y['Code'], :] = y
+
+        if day < len(self.backtest_period):
+            market_event = MarketEvent(self.date)
+            self.events.put(market_event)
+
+        elif day == len(self.backtest_period):
+            portfolio.sell_all_holdings(self.date)
+            self.continue_backtest = False
+
+    def get_latest_bar_values(self, index):
+        return self.bar_y_info.iloc[index, :]
+
+    def get_latest_bar_value(self, symbol, type):
+        return self.latest_bars.loc[symbol, type]
+
+
+
+
+
+
+
+################
+
+
+class DataHandler(object):
+
+    def __init__(self, events, start_date, backtest_date, symbol_list, X, y, backtest_X, backtest_y_info):
+
+        self.events = events
+        self.start_date = start_date
+        self.backtest_date = backtest_date
+        self.symbol_list = symbol_list
+        self.continue_backtest = True
+
+        self._get_data(X, y, backtest_X, backtest_y_info)
+
+    def _get_data(self, X, y, backtest_X, backtest_y_info):
+        self.X = X
+        self.y = y
+        self.backtest_X = backtest_X
+        self.backtest_y_info = backtest_y_info
+        self.backtest_period = sorted(set(backtest_X.index))
+        self.latest_bars = pd.DataFrame(0.0, index=self.symbol_list,
+                                        columns=backtest_y_info.columns)
+
+    def update_bars(self, day, portfolio):
+
+        portfolio.buy = 0
+        portfolio.sell = 0
+        portfolio.current_prices = dict([(s+'-', 0) for s in self.symbol_list] +
+                                        [(s+'+', 0) for s in self.symbol_list])
 
         self.date = self.backtest_period[day-1]
         self.bar_X = self.backtest_X.loc[self.date, :]
