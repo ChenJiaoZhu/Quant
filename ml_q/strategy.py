@@ -161,6 +161,7 @@ if __name__ == "__main__":
     start_date = '2007-01-01'
     backtest_date = '2016-08-01'
     threshold = 0.03
+    ndays, idays = 13, 4
 
     backtest = Backtest(codes,
                         initial_capital,
@@ -171,7 +172,9 @@ if __name__ == "__main__":
                         ExecutionHandler,
                         Portfolio,
                         MLModelingStrategy,
-                        threshold)
+                        threshold,
+                        ndays,
+                        idays)
 
     backtest.simulate_trading()
 
