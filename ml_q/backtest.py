@@ -27,7 +27,7 @@ class Backtest(object):
     """
     def __init__(self, symbol_list, initial_capital, heartbeat, start_date,
                  backtest_date, data_handler, execution_handler, portfolio,
-                 strategy, threshold):
+                 strategy, threshold, ndays, idays):
 
         self.symbol_list = symbol_list
         self.initial_capital = initial_capital
@@ -47,16 +47,16 @@ class Backtest(object):
         self.orders = 0
         self.fills = 0
 
-        self._generate_trading_instances()
+        self._generate_trading_instances(ndays, idays)
 
-    def _generate_trading_instances(self):
+    def _generate_trading_instances(self, ndays, idays):
         """
         Generates the trading instance objects from their class types.
         """
         print "Creating DataHandler, Strategy, Portfolio and ExecutionHandler..."
         self.data_handler = self.data_handler_cls(self.events, self.start_date,
                                                   self.backtest_date, self.symbol_list)
-        self.strategy = self.strategy_cls(self.data_handler, self.events, self.threshold)
+        self.strategy = self.strategy_cls(self.data_handler, self.events, ndays, idays, self.threshold)
         self.portfolio = self.portfolio_cls(self.data_handler, self.events, self.start_date,
                                             self.backtest_date, self.initial_capital)
         self.execution_handler = self.execution_handler_cls(self.events)
@@ -162,7 +162,7 @@ class Backtest(object):
     """
     def __init__(self, symbol_list, initial_capital, heartbeat, start_date,
                  backtest_date, data_handler, execution_handler, portfolio,
-                 strategy, threshold, X, y, backtest_X, backtest_y_info, models, ensemble):
+                 strategy, threshold, ndays, idays, X, y, backtest_X, backtest_y_info, models, ensemble):
 
         self.symbol_list = symbol_list
         self.initial_capital = initial_capital
@@ -182,16 +182,16 @@ class Backtest(object):
         self.orders = 0
         self.fills = 0
 
-        self._generate_trading_instances(X, y, backtest_X, backtest_y_info, models, ensemble)
+        self._generate_trading_instances(ndays, idays, X, y, backtest_X, backtest_y_info, models, ensemble)
 
-    def _generate_trading_instances(self, X, y, backtest_X, backtest_y_info, models, ensemble):
+    def _generate_trading_instances(self, ndays, idays, X, y, backtest_X, backtest_y_info, models, ensemble):
         """
         Generates the trading instance objects from their class types.
         """
         print "Creating DataHandler, Strategy, Portfolio and ExecutionHandler..."
         self.data_handler = self.data_handler_cls(self.events, self.start_date,
                                                   self.backtest_date, self.symbol_list, X, y, backtest_X, backtest_y_info)
-        self.strategy = self.strategy_cls(self.data_handler, self.events, models, ensemble, self.threshold)
+        self.strategy = self.strategy_cls(self.data_handler, self.events, ndays, idays, models, ensemble, self.threshold)
         self.portfolio = self.portfolio_cls(self.data_handler, self.events, self.start_date,
                                             self.backtest_date, self.initial_capital)
         self.execution_handler = self.execution_handler_cls(self.events)

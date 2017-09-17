@@ -295,6 +295,32 @@ class DataHandler(object):
             portfolio.sell_all_holdings(self.date)
             self.continue_backtest = False
 
+    def whether_decrease(self, ndays, idays):
+
+        decrease = {}
+        for symbol in self.symbol_list:
+            y_info = self.backtest_y_info[self.backtest_y_info['Code'] == symbol]
+            y_info = y_info['True_close'].diff()
+            y_info[0] = 0
+            y_info = np.sign(y_info)
+            number = {}
+            for n, date in enumerate(y_info.index):
+                if n == 0:
+                    number[date] = True
+                elif n <= ndays:
+                    if y_info[:n][y_info[:n]<0].count() < idays:
+                        number[date] = True
+                    else:
+                        number[date] = False
+                else:
+                    if y_info[n-ndays:n][y_info[n-ndays:n] < 0].count() < idays:
+                        number[date] = True
+                    else:
+                        number[date] = False
+            decrease[symbol] = number.copy()
+
+        return decrease
+
     def get_latest_bar_values(self, index):
         return self.bar_y_info.iloc[index, :]
 
@@ -353,6 +379,32 @@ class DataHandler(object):
         elif day == len(self.backtest_period):
             portfolio.sell_all_holdings(self.date)
             self.continue_backtest = False
+
+    def whether_decrease(self, ndays, idays):
+
+        decrease = {}
+        for symbol in self.symbol_list:
+            y_info = self.backtest_y_info[self.backtest_y_info['Code'] == symbol]
+            y_info = y_info['True_close'].diff()
+            y_info[0] = 0
+            y_info = np.sign(y_info)
+            number = {}
+            for n, date in enumerate(y_info.index):
+                if n == 0:
+                    number[date] = True
+                elif n <= ndays:
+                    if y_info[:n][y_info[:n]<0].count() < idays:
+                        number[date] = True
+                    else:
+                        number[date] = False
+                else:
+                    if y_info[n-ndays:n][y_info[n-ndays:n] < 0].count() < idays:
+                        number[date] = True
+                    else:
+                        number[date] = False
+            decrease[symbol] = number.copy()
+
+        return decrease
 
     def get_latest_bar_values(self, index):
         return self.bar_y_info.iloc[index, :]

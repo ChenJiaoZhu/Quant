@@ -30,7 +30,7 @@ class MLModelingStrategy(Strategy):
     events : The Event Queue object.
     threshold : One trade return of each stock which decides the price to buy or sell.
     """
-    def __init__(self, bars, events, threshold=0.02):
+    def __init__(self, bars, events, ndays, idays, threshold=0.02):
 
         self.bars = bars
         self.symbol_list = self.bars.symbol_list
@@ -42,6 +42,8 @@ class MLModelingStrategy(Strategy):
 
         # Sets to True if a symbol is in the market
         self.bought = self._calculate_initial_bought()
+
+        self.decrease = self.bars.whether_decrease(ndays, idays)
 
     def _train_model(self):
         # Gets the best subset for every model
@@ -139,8 +141,9 @@ class MLModelingStrategy(Strategy):
                         signal = SignalEvent(strategy_id, symbol, dt, sig_dir, strength, buy_threshold)
                     else:
                         signal = SignalEvent(strategy_id, symbol, dt, sig_dir, strength, bars['True_open'])
-                    self.events.put(signal)
-                    self.bought[symbol] = 'LONG'
+                    if self.decrease[symbol][dt]:
+                        self.events.put(signal)
+                        self.bought[symbol] = 'LONG'
 
 
 if __name__ == "__main__":
@@ -205,7 +208,7 @@ class MLModelingStrategy(Strategy):
     events : The Event Queue object.
     threshold : One trade return of each stock which decides the price to buy or sell.
     """
-    def __init__(self, bars, events, models, ensemble, threshold=0.02):
+    def __init__(self, bars, events, ndays, idays, models, ensemble, threshold=0.02):
 
         self.bars = bars
         self.symbol_list = self.bars.symbol_list
@@ -217,6 +220,8 @@ class MLModelingStrategy(Strategy):
 
         # Sets to True if a symbol is in the market
         self.bought = self._calculate_initial_bought()
+
+        self.decrease = self.bars.whether_decrease(ndays, idays)
 
     def _calculate_initial_bought(self):
         """
@@ -252,7 +257,6 @@ class MLModelingStrategy(Strategy):
 
             # Predicts the final results through fitting the new X to parametrised ensemble model
             self.y_pred = self.ensemble_model.predict(X_test_pred)
-            count = 0
 
             for i, pred in enumerate(self.y_pred):
                 buy_threshold = ((pred * (1.0 + deviation)) / (1.0 + self.threshold)) / (1.0 + fee)
@@ -279,9 +283,9 @@ class MLModelingStrategy(Strategy):
                         signal = SignalEvent(strategy_id, symbol, dt, sig_dir, strength, buy_threshold)
                     else:
                         signal = SignalEvent(strategy_id, symbol, dt, sig_dir, strength, bars['True_open'])
-                    self.events.put(signal)
-                    count += 1
-                    self.bought[symbol] = 'LONG'
+                    if self.decrease[symbol][dt]:
+                        self.events.put(signal)
+                        self.bought[symbol] = 'LONG'
 
 
 if __name__ == "__main__":
@@ -299,17 +303,61 @@ if __name__ == "__main__":
     start_date = '2007-01-01'
     backtest_date = '2016-08-01'
     threshold = 0.03
+    # ndays, idays = 10, 7
 
-    backtest = Backtest(codes,
-                        initial_capital,
-                        heartbeat,
-                        start_date,
-                        backtest_date,
-                        DataHandler,
-                        ExecutionHandler,
-                        Portfolio,
-                        MLModelingStrategy,
-                        threshold,
-                        X, y, backtest_X, backtest_y_info, models, ensemble)
+    dic = {}
+    r, max_n, max_i = 0,0,0
+    for n in range(13):
+        for i in range(n+1):
+            ndays, idays = n+1, i+1
 
-    backtest.simulate_trading()
+            backtest = Backtest(codes,
+                                initial_capital,
+                                heartbeat,
+                                start_date,
+                                backtest_date,
+                                DataHandler,
+                                ExecutionHandler,
+                                Portfolio,
+                                MLModelingStrategy,
+                                threshold,
+                                ndays, idays,
+                                X, y, backtest_X, backtest_y_info, models, ensemble)
+
+            backtest.simulate_trading()
+
+            ec = backtest.portfolio.equity_curve
+            dic[ndays*10+idays] = ec.copy()
+            earn = (ec.loc['2017-07-31','total']-300000)
+            rtn = earn / (300000-ec['cash'].min())
+            if rtn > r:
+                r = rtn
+                max_n, max_i = ndays, idays
+            print '[%s, %s]: %s, earn: %.1f.     Max: %s [%s, %s]' % (ndays, idays, rtn, earn, r, max_n, max_i)
+
+
+
+    compare = []
+    max = 0
+    for n in range(13):
+        for i in range(n+1):
+            ndays, idays = n+1, i+1
+            ecc = dic[ndays*10+idays]
+            com = {}
+            spent = 300000-ecc['cash'].min()
+            com['spent'] = int(spent)
+            earn = (ecc.loc['2017-07-31', 'total'] - 300000)
+            com['earn'] = int(earn)
+            rtn = earn / spent
+            com['rtn'] = rtn
+            if rtn > max:
+                max = rtn
+            com['max_rtn'] = max
+            com['total_times'] = ecc.loc['2017-07-31', 'total_times']
+            com['commission'] = int(ecc.loc['2017-07-31', 'commission'])
+            com['param'] = '%s, %s' % (ndays, idays)
+            compare.append(com.copy())
+
+    result = pd.DataFrame(compare)
+    result.set_index('param', inplace=True)
+    result = result[['total_times', 'commission', 'earn', 'spent', 'rtn', 'max_rtn']]
