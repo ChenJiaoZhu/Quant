@@ -406,6 +406,32 @@ class DataHandler(object):
 
         return decrease
 
+    def whether_decrease_fix_day(self, ndays, idays):
+
+        decrease = {}
+        for symbol in self.symbol_list:
+            y_info = self.backtest_y_info[self.backtest_y_info['Code'] == symbol]
+            y_info = y_info['True_close'].copy()
+            number = {}
+            for n, date in enumerate(y_info.index):
+                if n == 0 or n == 1:
+                    number[date] = True
+                elif n <= ndays + 1:
+                    diff = y_info[n-1] - y_info[:n-1]
+                    if diff[diff < 0].count() < idays:
+                        number[date] = True
+                    else:
+                        number[date] = False
+                else:
+                    diff = y_info[n-1] - y_info[n-1-ndays:n-1]
+                    if diff[diff < 0].count() < idays:
+                        number[date] = True
+                    else:
+                        number[date] = False
+            decrease[symbol] = number.copy()
+
+        return decrease
+
     def get_latest_bar_values(self, index):
         return self.bar_y_info.iloc[index, :]
 

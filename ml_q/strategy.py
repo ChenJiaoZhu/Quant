@@ -310,7 +310,7 @@ if __name__ == "__main__":
 
     dic = {}
     r, max_n, max_i = 0,0,0
-    for n in range(17):
+    for n in range(15):
         for i in range(n+1):
             ndays, idays = n+1, i+1
 
@@ -330,7 +330,7 @@ if __name__ == "__main__":
             backtest.simulate_trading()
 
             ec = backtest.portfolio.equity_curve
-            dic[ndays*100+idays] = ec.copy()
+            dic[ndays*1000+idays] = ec.copy()
             earn = (ec.loc['2017-07-31','total']-300000)
             rtn = earn / (300000-ec['cash'].min())
             if rtn > r:
@@ -342,10 +342,10 @@ if __name__ == "__main__":
 
     compare = []
     max = 0
-    for n in range(17):
+    for n in range(15):
         for i in range(n+1):
             ndays, idays = n+1, i+1
-            ecc = dic[ndays*100+idays]
+            ecc = dic[ndays*1000+idays]
             com = {}
             spent = 300000-ecc['cash'].min()
             com['spent'] = int(spent)
