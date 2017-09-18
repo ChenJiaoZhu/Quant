@@ -27,7 +27,7 @@ class Backtest(object):
     """
     def __init__(self, symbol_list, initial_capital, heartbeat, start_date,
                  backtest_date, data_handler, execution_handler, portfolio,
-                 strategy, threshold, ndays, idays):
+                 strategy, threshold, per_return, ndays, idays):
 
         self.symbol_list = symbol_list
         self.initial_capital = initial_capital
@@ -40,6 +40,7 @@ class Backtest(object):
         self.portfolio_cls = portfolio
         self.strategy_cls = strategy
         self.threshold = threshold
+        self.per_return = per_return
 
         self.events = queue.Queue()
 
@@ -56,10 +57,12 @@ class Backtest(object):
         print "Creating DataHandler, Strategy, Portfolio and ExecutionHandler..."
         self.data_handler = self.data_handler_cls(self.events, self.start_date,
                                                   self.backtest_date, self.symbol_list)
-        self.strategy = self.strategy_cls(self.data_handler, self.events, ndays, idays, self.threshold)
+        self.strategy = self.strategy_cls(self.data_handler, self.events, ndays, idays,
+                                          self.threshold, self.per_return)
         self.portfolio = self.portfolio_cls(self.data_handler, self.events, self.start_date,
                                             self.backtest_date, self.initial_capital)
         self.execution_handler = self.execution_handler_cls(self.events)
+        self.data_handler.get_portfolio(self.portfolio)
 
     def _run_backtest(self):
         """
@@ -70,7 +73,7 @@ class Backtest(object):
             i += 1
             # Update the market bars
             if self.data_handler.continue_backtest == True:
-                self.data_handler.update_bars(i, self.portfolio)
+                self.data_handler.update_bars(i)
             else:
                 break
 
@@ -162,7 +165,8 @@ class Backtest(object):
     """
     def __init__(self, symbol_list, initial_capital, heartbeat, start_date,
                  backtest_date, data_handler, execution_handler, portfolio,
-                 strategy, threshold, ndays, idays, X, y, backtest_X, backtest_y_info, models, ensemble):
+                 strategy, threshold, per_return, ndays, idays,
+                 X, y, backtest_X, backtest_y_info, models, ensemble):
 
         self.symbol_list = symbol_list
         self.initial_capital = initial_capital
@@ -175,6 +179,7 @@ class Backtest(object):
         self.portfolio_cls = portfolio
         self.strategy_cls = strategy
         self.threshold = threshold
+        self.per_return = per_return
 
         self.events = queue.Queue()
 
@@ -191,10 +196,12 @@ class Backtest(object):
         print "Creating DataHandler, Strategy, Portfolio and ExecutionHandler..."
         self.data_handler = self.data_handler_cls(self.events, self.start_date,
                                                   self.backtest_date, self.symbol_list, X, y, backtest_X, backtest_y_info)
-        self.strategy = self.strategy_cls(self.data_handler, self.events, ndays, idays, models, ensemble, self.threshold)
+        self.strategy = self.strategy_cls(self.data_handler, self.events, ndays, idays, models, ensemble,
+                                          self.threshold, self.per_return)
         self.portfolio = self.portfolio_cls(self.data_handler, self.events, self.start_date,
                                             self.backtest_date, self.initial_capital)
         self.execution_handler = self.execution_handler_cls(self.events)
+        self.data_handler.get_portfolio(self.portfolio)
 
     def _run_backtest(self):
         """
@@ -205,7 +212,7 @@ class Backtest(object):
             i += 1
             # Update the market bars
             if self.data_handler.continue_backtest == True:
-                self.data_handler.update_bars(i, self.portfolio)
+                self.data_handler.update_bars(i)
             else:
                 break
 

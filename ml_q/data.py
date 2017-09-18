@@ -272,97 +272,15 @@ class DataHandler(object):
         self.latest_bars = pd.DataFrame(0.0, index=self.symbol_list,
                                         columns=backtest_y_info.columns)
 
-    def update_bars(self, day, portfolio):
+    def get_portfolio(self, portfolio):
+        self.portfolio = portfolio
 
-        portfolio.buy = 0
-        portfolio.sell = 0
-        portfolio.current_prices = dict([(s+'-', 0) for s in self.symbol_list] +
-                                        [(s+'+', 0) for s in self.symbol_list])
+    def update_bars(self, day):
 
-        self.date = self.backtest_period[day-1]
-        self.bar_X = self.backtest_X.loc[self.date, :]
-        self.bar_y_info = self.backtest_y_info.loc[self.date, :]
-
-        for i in range(len(self.bar_y_info)):
-            y = self.bar_y_info.iloc[i, :]
-            self.latest_bars.loc[y['Code'], :] = y
-
-        if day < len(self.backtest_period):
-            market_event = MarketEvent(self.date)
-            self.events.put(market_event)
-
-        elif day == len(self.backtest_period):
-            portfolio.sell_all_holdings(self.date)
-            self.continue_backtest = False
-
-    def whether_decrease(self, ndays, idays):
-
-        decrease = {}
-        for symbol in self.symbol_list:
-            y_info = self.backtest_y_info[self.backtest_y_info['Code'] == symbol]
-            y_info = y_info['True_close'].diff()
-            y_info[0] = 0
-            y_info = np.sign(y_info)
-            number = {}
-            for n, date in enumerate(y_info.index):
-                if n == 0:
-                    number[date] = True
-                elif n <= ndays:
-                    if y_info[:n][y_info[:n]<0].count() < idays:
-                        number[date] = True
-                    else:
-                        number[date] = False
-                else:
-                    if y_info[n-ndays:n][y_info[n-ndays:n] < 0].count() < idays:
-                        number[date] = True
-                    else:
-                        number[date] = False
-            decrease[symbol] = number.copy()
-
-        return decrease
-
-    def get_latest_bar_values(self, index):
-        return self.bar_y_info.iloc[index, :]
-
-    def get_latest_bar_value(self, symbol, type):
-        return self.latest_bars.loc[symbol, type]
-
-
-
-
-
-
-
-################
-
-
-class DataHandler(object):
-
-    def __init__(self, events, start_date, backtest_date, symbol_list, X, y, backtest_X, backtest_y_info):
-
-        self.events = events
-        self.start_date = start_date
-        self.backtest_date = backtest_date
-        self.symbol_list = symbol_list
-        self.continue_backtest = True
-
-        self._get_data(X, y, backtest_X, backtest_y_info)
-
-    def _get_data(self, X, y, backtest_X, backtest_y_info):
-        self.X = X
-        self.y = y
-        self.backtest_X = backtest_X
-        self.backtest_y_info = backtest_y_info
-        self.backtest_period = sorted(set(backtest_X.index))
-        self.latest_bars = pd.DataFrame(0.0, index=self.symbol_list,
-                                        columns=backtest_y_info.columns)
-
-    def update_bars(self, day, portfolio):
-
-        portfolio.buy = 0
-        portfolio.sell = 0
-        portfolio.current_prices = dict([(s+'-', 0) for s in self.symbol_list] +
-                                        [(s+'+', 0) for s in self.symbol_list])
+        self.portfolio.buy = 0
+        self.portfolio.sell = 0
+        self.portfolio.current_prices = dict([(s+'-', 0) for s in self.symbol_list] +
+                                             [(s+'+', 0) for s in self.symbol_list])
 
         self.date = self.backtest_period[day-1]
         self.bar_X = self.backtest_X.loc[self.date, :]
@@ -377,7 +295,7 @@ class DataHandler(object):
             self.events.put(market_event)
 
         elif day == len(self.backtest_period):
-            portfolio.sell_all_holdings(self.date)
+            self.portfolio.sell_all_holdings(self.date)
             self.continue_backtest = False
 
     def whether_decrease(self, ndays, idays):
@@ -437,3 +355,135 @@ class DataHandler(object):
 
     def get_latest_bar_value(self, symbol, type):
         return self.latest_bars.loc[symbol, type]
+
+    def get_current_position(self, symbol):
+        return self.portfolio.current_positions[symbol]
+
+    def get_current_holding(self, symbol):
+        return self.portfolio.current_holdings[symbol]
+
+    def get_last_holding(self, symbol):
+        return self.portfolio.last_holdings[symbol]
+
+
+
+
+
+
+
+################
+
+
+class DataHandler(object):
+
+    def __init__(self, events, start_date, backtest_date, symbol_list, X, y, backtest_X, backtest_y_info):
+
+        self.events = events
+        self.start_date = start_date
+        self.backtest_date = backtest_date
+        self.symbol_list = symbol_list
+        self.continue_backtest = True
+
+        self._get_data(X, y, backtest_X, backtest_y_info)
+
+    def _get_data(self, X, y, backtest_X, backtest_y_info):
+        self.X = X
+        self.y = y
+        self.backtest_X = backtest_X
+        self.backtest_y_info = backtest_y_info
+        self.backtest_period = sorted(set(backtest_X.index))
+        self.latest_bars = pd.DataFrame(0.0, index=self.symbol_list,
+                                        columns=backtest_y_info.columns)
+
+    def get_portfolio(self, portfolio):
+        self.portfolio = portfolio
+
+    def update_bars(self, day):
+
+        self.portfolio.buy = 0
+        self.portfolio.sell = 0
+        self.portfolio.current_prices = dict([(s+'-', 0) for s in self.symbol_list] +
+                                             [(s+'+', 0) for s in self.symbol_list])
+
+        self.date = self.backtest_period[day-1]
+        self.bar_X = self.backtest_X.loc[self.date, :]
+        self.bar_y_info = self.backtest_y_info.loc[self.date, :]
+
+        for i in range(len(self.bar_y_info)):
+            y = self.bar_y_info.iloc[i, :]
+            self.latest_bars.loc[y['Code'], :] = y
+
+        if day < len(self.backtest_period):
+            market_event = MarketEvent(self.date)
+            self.events.put(market_event)
+
+        elif day == len(self.backtest_period):
+            self.portfolio.sell_all_holdings(self.date)
+            self.continue_backtest = False
+
+    def whether_decrease(self, ndays, idays):
+
+        decrease = {}
+        for symbol in self.symbol_list:
+            y_info = self.backtest_y_info[self.backtest_y_info['Code'] == symbol]
+            y_info = y_info['True_close'].diff()
+            y_info[0] = 0
+            y_info = np.sign(y_info)
+            number = {}
+            for n, date in enumerate(y_info.index):
+                if n == 0:
+                    number[date] = True
+                elif n <= ndays:
+                    if y_info[:n][y_info[:n]<0].count() < idays:
+                        number[date] = True
+                    else:
+                        number[date] = False
+                else:
+                    if y_info[n-ndays:n][y_info[n-ndays:n] < 0].count() < idays:
+                        number[date] = True
+                    else:
+                        number[date] = False
+            decrease[symbol] = number.copy()
+
+        return decrease
+
+    def whether_decrease_fix_day(self, ndays, idays):
+
+        decrease = {}
+        for symbol in self.symbol_list:
+            y_info = self.backtest_y_info[self.backtest_y_info['Code'] == symbol]
+            y_info = y_info['True_close'].copy()
+            number = {}
+            for n, date in enumerate(y_info.index):
+                if n == 0 or n == 1:
+                    number[date] = True
+                elif n <= ndays + 1:
+                    diff = y_info[n-1] - y_info[:n-1]
+                    if diff[diff < 0].count() < idays:
+                        number[date] = True
+                    else:
+                        number[date] = False
+                else:
+                    diff = y_info[n-1] - y_info[n-1-ndays:n-1]
+                    if diff[diff < 0].count() < idays:
+                        number[date] = True
+                    else:
+                        number[date] = False
+            decrease[symbol] = number.copy()
+
+        return decrease
+
+    def get_latest_bar_values(self, index):
+        return self.bar_y_info.iloc[index, :]
+
+    def get_latest_bar_value(self, symbol, type):
+        return self.latest_bars.loc[symbol, type]
+
+    def get_current_position(self, symbol):
+        return self.portfolio.current_positions[symbol]
+
+    def get_current_holding(self, symbol):
+        return self.portfolio.current_holdings[symbol]
+
+    def get_last_holding(self, symbol):
+        return self.portfolio.last_holdings[symbol]

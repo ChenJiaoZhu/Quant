@@ -47,6 +47,7 @@ class Portfolio(object):
 
         self.all_holdings = self._construct_all_holdings()
         self.current_holdings = self.all_holdings[0].copy()
+        self.last_holdings = self.all_holdings[0].copy()
 
     def _construct_all_positions(self):
         """
@@ -62,7 +63,7 @@ class Portfolio(object):
         Constructs the prices list using the backtest_date object
         to determine when the time index will begin.
         """
-        d = dict([(s+'-', 0) for s in self.symbol_list] + [(s+'+', 0) for s in self.symbol_list])
+        d = dict([(s+'-', 0.0) for s in self.symbol_list] + [(s+'+', 0.0) for s in self.symbol_list])
         d['datetime'] = self.backtest_date
         return [d]
 
@@ -168,6 +169,9 @@ class Portfolio(object):
         self.current_holdings[fill.symbol] += (cost - fill.commission)
         self.current_holdings['commission'] += fill.commission
         self.current_holdings['cash'] += (cost - fill.commission)
+
+        if fill.direction == 'SELL':
+            self.last_holdings[fill.symbol] = self.current_holdings[fill.symbol]
 
     def update_timeindex(self, day):
         """

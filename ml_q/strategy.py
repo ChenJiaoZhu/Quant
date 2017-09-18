@@ -30,12 +30,13 @@ class MLModelingStrategy(Strategy):
     events : The Event Queue object.
     threshold : One trade return of each stock which decides the price to buy or sell.
     """
-    def __init__(self, bars, events, ndays, idays, threshold=0.02):
+    def __init__(self, bars, events, ndays, idays, threshold=0.02, per_return=0.1):
 
         self.bars = bars
         self.symbol_list = self.bars.symbol_list
         self.events = events
         self.threshold = threshold
+        self.per_return = per_return
 
         # Trains the prediction models.
         self.models, self.ensemble_model = self._train_model()
@@ -126,14 +127,25 @@ class MLModelingStrategy(Strategy):
                 strength = 1.0
                 strategy_id = 1
 
-                if sell_threshold < bars['True_high'] and self.bought[symbol] == "LONG":
-                    sig_dir = 'EXIT'
-                    if sell_threshold >= bars['True_open']:
-                        signal = SignalEvent(strategy_id, symbol, dt, sig_dir, strength, sell_threshold)
-                    else:
-                        signal = SignalEvent(strategy_id, symbol, dt, sig_dir, strength, bars['True_open'])
-                    self.events.put(signal)
-                    self.bought[symbol] = 'OUT'
+                if self.bought[symbol] == "LONG":
+                    position = self.bars.get_current_position(symbol)
+                    current_holding = self.bars.get_current_holding(symbol)
+                    last_holding = self.bars.get_last_holding(symbol)
+                    if position > 0:
+                        mean_price = - (current_holding - last_holding) / position
+                        sell_p = (mean_price * (1.0 + self.per_return)) / (1.0 - fee - 0.001)
+                        if sell_p < bars['True_high']:
+                            sig_dir = 'EXIT'
+                            signal = SignalEvent(strategy_id, symbol, dt, sig_dir, strength,
+                                                 max(sell_p, bars['True_open']))
+                            self.events.put(signal)
+                            self.bought[symbol] = 'OUT'
+                        elif sell_threshold < bars['True_high']:
+                            sig_dir = 'EXIT'
+                            signal = SignalEvent(strategy_id, symbol, dt, sig_dir, strength,
+                                                 max(sell_threshold, bars['True_open']))
+                            self.events.put(signal)
+                            self.bought[symbol] = 'OUT'
 
                 if buy_threshold > bars['True_low'] and buy_threshold < bars['True_high']:
                     sig_dir = 'LONG'
@@ -161,6 +173,7 @@ if __name__ == "__main__":
     start_date = '2007-01-01'
     backtest_date = '2016-08-01'
     threshold = 0.03
+    per_return = 0.1
     ndays, idays = 13, 4
 
     backtest = Backtest(codes,
@@ -173,6 +186,7 @@ if __name__ == "__main__":
                         Portfolio,
                         MLModelingStrategy,
                         threshold,
+                        per_return,
                         ndays,
                         idays)
 
@@ -211,12 +225,13 @@ class MLModelingStrategy(Strategy):
     events : The Event Queue object.
     threshold : One trade return of each stock which decides the price to buy or sell.
     """
-    def __init__(self, bars, events, ndays, idays, models, ensemble, threshold=0.02):
+    def __init__(self, bars, events, ndays, idays, models, ensemble, threshold=0.02, per_return=0.1):
 
         self.bars = bars
         self.symbol_list = self.bars.symbol_list
         self.events = events
         self.threshold = threshold
+        self.per_return = per_return
 
         # Trains the prediction models.
         self.models, self.ensemble_model = models, ensemble
@@ -271,14 +286,25 @@ class MLModelingStrategy(Strategy):
                 strength = 1.0
                 strategy_id = 1
 
-                if sell_threshold < bars['True_high'] and self.bought[symbol] == "LONG":
-                    sig_dir = 'EXIT'
-                    if sell_threshold >= bars['True_open']:
-                        signal = SignalEvent(strategy_id, symbol, dt, sig_dir, strength, sell_threshold)
-                    else:
-                        signal = SignalEvent(strategy_id, symbol, dt, sig_dir, strength, bars['True_open'])
-                    self.events.put(signal)
-                    self.bought[symbol] = 'OUT'
+                if self.bought[symbol] == "LONG":
+                    position = self.bars.get_current_position(symbol)
+                    current_holding = self.bars.get_current_holding(symbol)
+                    last_holding = self.bars.get_last_holding(symbol)
+                    if position > 0:
+                        mean_price = - (current_holding - last_holding) / position
+                        sell_p = (mean_price * (1.0 + self.per_return)) / (1.0 - fee - 0.001)
+                        if sell_p < bars['True_high']:
+                            sig_dir = 'EXIT'
+                            signal = SignalEvent(strategy_id, symbol, dt, sig_dir, strength,
+                                                 max(sell_p, bars['True_open']))
+                            self.events.put(signal)
+                            self.bought[symbol] = 'OUT'
+                        elif sell_threshold < bars['True_high']:
+                            sig_dir = 'EXIT'
+                            signal = SignalEvent(strategy_id, symbol, dt, sig_dir, strength,
+                                                 max(sell_threshold, bars['True_open']))
+                            self.events.put(signal)
+                            self.bought[symbol] = 'OUT'
 
                 if buy_threshold > bars['True_low'] and buy_threshold < bars['True_high']:
                     sig_dir = 'LONG'
@@ -306,60 +332,65 @@ if __name__ == "__main__":
     start_date = '2007-01-01'
     backtest_date = '2016-08-01'
     threshold = 0.03
+    # per_return = 0.2
     # ndays, idays = 10, 7
 
     dic = {}
-    r, max_n, max_i = 0,0,0
-    for n in range(15):
+    r, max_n, max_i, max_p = 0,0,0,0
+    for n in range(4):
         for i in range(n+1):
-            ndays, idays = n+1, i+1
+            for p in [0.2, 0.15, 0.1, 0.05]:
+                ndays, idays, per_return = n+1, i+1, p
 
-            backtest = Backtest(codes,
-                                initial_capital,
-                                heartbeat,
-                                start_date,
-                                backtest_date,
-                                DataHandler,
-                                ExecutionHandler,
-                                Portfolio,
-                                MLModelingStrategy,
-                                threshold,
-                                ndays, idays,
-                                X, y, backtest_X, backtest_y_info, models, ensemble)
+                backtest = Backtest(codes,
+                                    initial_capital,
+                                    heartbeat,
+                                    start_date,
+                                    backtest_date,
+                                    DataHandler,
+                                    ExecutionHandler,
+                                    Portfolio,
+                                    MLModelingStrategy,
+                                    threshold,
+                                    per_return,
+                                    ndays, idays,
+                                    X, y, backtest_X, backtest_y_info, models, ensemble)
 
-            backtest.simulate_trading()
+                backtest.simulate_trading()
 
-            ec = backtest.portfolio.equity_curve
-            dic[ndays*1000+idays] = ec.copy()
-            earn = (ec.loc['2017-07-31','total']-300000)
-            rtn = earn / (300000-ec['cash'].min())
-            if rtn > r:
-                r = rtn
-                max_n, max_i = ndays, idays
-            print '[%s, %s]: %s, earn: %.1f.     Max: %s [%s, %s]' % (ndays, idays, rtn, earn, r, max_n, max_i)
+                ec = backtest.portfolio.equity_curve
+                dic[ndays*1000+idays] = ec.copy()
+                earn = (ec.loc['2017-07-31','total']-300000)
+                rtn = earn / (300000-ec['cash'].min())
+                if rtn > r:
+                    r = rtn
+                    max_n, max_i, max_p = ndays, idays, per_return
+                print '[%s, %s, %s]: %s, earn: %.1f      Max: %s [%s, %s, %s]' % \
+                      (ndays, idays, per_return, rtn, earn, r, max_n, max_i, max_p)
 
 
 
     compare = []
-    max = 0
-    for n in range(15):
+    maxx = 0
+    for n in range(4):
         for i in range(n+1):
-            ndays, idays = n+1, i+1
-            ecc = dic[ndays*1000+idays]
-            com = {}
-            spent = 300000-ecc['cash'].min()
-            com['spent'] = int(spent)
-            earn = (ecc.loc['2017-07-31', 'total'] - 300000)
-            com['earn'] = int(earn)
-            rtn = earn / spent
-            com['rtn'] = rtn
-            if rtn > max:
-                max = rtn
-            com['max_rtn'] = max
-            com['total_times'] = ecc.loc['2017-07-31', 'total_times']
-            com['commission'] = int(ecc.loc['2017-07-31', 'commission'])
-            com['param'] = '%s, %s' % (ndays, idays)
-            compare.append(com.copy())
+            for p in [0.2, 0.15, 0.1, 0.05]:
+                ndays, idays, per_return = n+1, i+1, p
+                ecc = dic[ndays*1000+idays]
+                com = {}
+                spent = 300000-ecc['cash'].min()
+                com['spent'] = int(spent)
+                earn = (ecc.loc['2017-07-31', 'total'] - 300000)
+                com['earn'] = int(earn)
+                rtn = earn / spent
+                com['rtn'] = rtn
+                if rtn > maxx:
+                    maxx = rtn
+                com['max_rtn'] = maxx
+                com['total_times'] = ecc.loc['2017-07-31', 'total_times']
+                com['commission'] = int(ecc.loc['2017-07-31', 'commission'])
+                com['param'] = '%s, %s, %s' % (ndays, idays, per_return)
+                compare.append(com.copy())
 
     result = pd.DataFrame(compare)
     result.set_index('param', inplace=True)
