@@ -293,6 +293,7 @@ class MLModelingStrategy(Strategy):
                     if position > 0:
                         mean_price = - (current_holding - last_holding) / position
                         sell_p = (mean_price * (1.0 + self.per_return)) / (1.0 - fee - 0.001)
+                        sell_p2 = (mean_price * (1.0 - self.per_return)) / (1.0 - fee - 0.001)
                         if sell_p < bars['True_high']:
                             sig_dir = 'EXIT'
                             signal = SignalEvent(strategy_id, symbol, dt, sig_dir, strength,
@@ -303,6 +304,11 @@ class MLModelingStrategy(Strategy):
                             sig_dir = 'EXIT'
                             signal = SignalEvent(strategy_id, symbol, dt, sig_dir, strength,
                                                  max(sell_threshold, bars['True_open']))
+                            self.events.put(signal)
+                            self.bought[symbol] = 'OUT'
+                        elif sell_p2 < bars['True_high'] and sell_p2 > bars['True_low']:
+                            sig_dir = 'EXIT'
+                            signal = SignalEvent(strategy_id, symbol, dt, sig_dir, strength, sell_p2)
                             self.events.put(signal)
                             self.bought[symbol] = 'OUT'
 
@@ -327,7 +333,7 @@ if __name__ == "__main__":
              u'600637', u'600649', u'600703', u'600718', u'600739', u'600804',
              u'600827', u'600875', u'600895', u'601601', u'601607', u'601628',
              u'601788', u'601928']
-    initial_capital = 300000.0
+    initial_capital = 10000.0
     heartbeat = 0.0
     start_date = '2007-01-01'
     backtest_date = '2016-08-01'
@@ -337,60 +343,60 @@ if __name__ == "__main__":
 
     dic = {}
     r, max_n, max_i, max_p = 0,0,0,0
-    for n in range(4):
-        for i in range(n+1):
-            for p in [0.2, 0.15, 0.1, 0.05]:
-                ndays, idays, per_return = n+1, i+1, p
+    # for n in range(7):
+    #     for i in range(n+1):
+    #         for p in [0.2, 0.15, 0.1, 0.05]:
+    ndays, idays, per_return = 13, 4, 0.09
 
-                backtest = Backtest(codes,
-                                    initial_capital,
-                                    heartbeat,
-                                    start_date,
-                                    backtest_date,
-                                    DataHandler,
-                                    ExecutionHandler,
-                                    Portfolio,
-                                    MLModelingStrategy,
-                                    threshold,
-                                    per_return,
-                                    ndays, idays,
-                                    X, y, backtest_X, backtest_y_info, models, ensemble)
+    backtest = Backtest(codes,
+                        initial_capital,
+                        heartbeat,
+                        start_date,
+                        backtest_date,
+                        DataHandler,
+                        ExecutionHandler,
+                        Portfolio,
+                        MLModelingStrategy,
+                        threshold,
+                        per_return,
+                        ndays, idays,
+                        X, y, backtest_X, backtest_y_info, models, ensemble)
 
-                backtest.simulate_trading()
+    backtest.simulate_trading()
 
-                ec = backtest.portfolio.equity_curve
-                dic[ndays*1000+idays] = ec.copy()
-                earn = (ec.loc['2017-07-31','total']-300000)
-                rtn = earn / (300000-ec['cash'].min())
-                if rtn > r:
-                    r = rtn
-                    max_n, max_i, max_p = ndays, idays, per_return
-                print '[%s, %s, %s]: %s, earn: %.1f      Max: %s [%s, %s, %s]' % \
-                      (ndays, idays, per_return, rtn, earn, r, max_n, max_i, max_p)
+    ec = backtest.portfolio.equity_curve
+    dic[ndays*1000+idays+per_return] = ec.copy()
+    earn = (ec.loc['2017-07-31','total']-initial_capital)
+    rtn = earn / (initial_capital-ec['cash'].min())
+    if rtn > r:
+        r = rtn
+        max_n, max_i, max_p = ndays, idays, per_return
+    print '[%s, %s, %s]: %s, earn: %.1f      Max: %s [%s, %s, %s]' % \
+          (ndays, idays, per_return, rtn, earn, r, max_n, max_i, max_p)
 
 
 
     compare = []
     maxx = 0
-    for n in range(4):
-        for i in range(n+1):
-            for p in [0.2, 0.15, 0.1, 0.05]:
-                ndays, idays, per_return = n+1, i+1, p
-                ecc = dic[ndays*1000+idays]
-                com = {}
-                spent = 300000-ecc['cash'].min()
-                com['spent'] = int(spent)
-                earn = (ecc.loc['2017-07-31', 'total'] - 300000)
-                com['earn'] = int(earn)
-                rtn = earn / spent
-                com['rtn'] = rtn
-                if rtn > maxx:
-                    maxx = rtn
-                com['max_rtn'] = maxx
-                com['total_times'] = ecc.loc['2017-07-31', 'total_times']
-                com['commission'] = int(ecc.loc['2017-07-31', 'commission'])
-                com['param'] = '%s, %s, %s' % (ndays, idays, per_return)
-                compare.append(com.copy())
+    # for n in range(7):
+    #     for i in range(n+1):
+    #         for p in [0.2, 0.15, 0.1, 0.05]:
+    ndays, idays, per_return = 13, 4, 0.09
+    ecc = dic[ndays*1000+idays+per_return]
+    com = {}
+    spent = initial_capital-ecc['cash'].min()
+    com['spent'] = int(spent)
+    earn = (ecc.loc['2017-07-31', 'total'] - initial_capital)
+    com['earn'] = int(earn)
+    rtn = earn / spent
+    com['rtn'] = rtn
+    if rtn > maxx:
+        maxx = rtn
+    com['max_rtn'] = maxx
+    com['total_times'] = ecc.loc['2017-07-31', 'total_times']
+    com['commission'] = int(ecc.loc['2017-07-31', 'commission'])
+    com['param'] = '%s, %s, %s' % (ndays, idays, per_return)
+    compare.append(com.copy())
 
     result = pd.DataFrame(compare)
     result.set_index('param', inplace=True)
