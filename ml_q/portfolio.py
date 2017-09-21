@@ -1,7 +1,9 @@
 # coding: UTF-8
 
 import pandas as pd
+from matplotlib import pyplot as plt
 from event import OrderEvent, SignalEvent
+from performance import create_sharpe_ratio, create_drawdowns, benchmark_return
 
 
 class Portfolio(object):
@@ -242,3 +244,44 @@ class Portfolio(object):
         prices = pd.DataFrame(self.all_prices)
         prices.set_index('datetime', inplace=True)
         self.prices = prices
+
+    def output_summary_stats(self):
+        """
+        Creates a list of summary statistics for the portfolio.
+        """
+        total_return = self.equity_curve['equity_curve'][-1]
+        returns = self.equity_curve['returns']
+        pnl = self.equity_curve['equity_curve']
+
+        sharpe_ratio = create_sharpe_ratio(returns)
+        drawdown, max_dd, dd_duration = create_drawdowns(pnl)
+        self.equity_curve['drawdown'] = drawdown
+        if len(dd_duration) == 1:
+            dd_duration = dd_duration[0]
+
+        stats = [("Total Return", "%0.2f%%" % ((total_return - 1.0) * 100.0)),
+                 ("Sharpe Ratio", "%0.2f" % sharpe_ratio),
+                 ("Max Drawdown", "%0.2f%%" % (max_dd * 100.0)),
+                 ("Drawdown Duration", "%s" % dd_duration)]
+
+        self.equity_curve.to_csv('equity.csv')
+        self.positions.to_csv('positions.csv')
+        self.prices.to_csv('prices.csv')
+
+        return stats
+
+    def plot_returns(self):
+
+        strategy = self.equity_curve['equity_curve']
+        benchmark, index = benchmark_return()
+        fig, ax = plt.subplots()
+        ax.plot(strategy.index.astype('datetime64'), strategy, label='strategy')
+        ax.plot(benchmark.index.astype('datetime64'), benchmark, label=index)
+        ax.plot(benchmark.index.astype('datetime64'), (1+strategy-benchmark),
+                label='excess earnings', linestyle='--', linewidth=0.5)
+        ax.grid(True)
+
+        plt.xlabel('Year-Month')
+        plt.ylabel('Return (%)')
+        plt.title('Equity curve')
+        plt.legend()

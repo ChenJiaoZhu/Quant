@@ -134,6 +134,7 @@ class MLModelingStrategy(Strategy):
                     if position > 0:
                         mean_price = - (current_holding - last_holding) / position
                         sell_p = (mean_price * (1.0 + self.per_return)) / (1.0 - fee - 0.001)
+                        sell_p2 = (mean_price * (1.0 - self.per_return)) / (1.0 - fee - 0.001)
                         if sell_p < bars['True_high']:
                             sig_dir = 'EXIT'
                             signal = SignalEvent(strategy_id, symbol, dt, sig_dir, strength,
@@ -146,13 +147,16 @@ class MLModelingStrategy(Strategy):
                                                  max(sell_threshold, bars['True_open']))
                             self.events.put(signal)
                             self.bought[symbol] = 'OUT'
+                        elif sell_p2 < bars['True_high'] and sell_p2 > bars['True_low']:
+                            sig_dir = 'EXIT'
+                            signal = SignalEvent(strategy_id, symbol, dt, sig_dir, strength, sell_p2)
+                            self.events.put(signal)
+                            self.bought[symbol] = 'OUT'
 
                 if buy_threshold > bars['True_low'] and buy_threshold < bars['True_high']:
                     sig_dir = 'LONG'
-                    if buy_threshold <= bars['True_open']:
-                        signal = SignalEvent(strategy_id, symbol, dt, sig_dir, strength, buy_threshold)
-                    else:
-                        signal = SignalEvent(strategy_id, symbol, dt, sig_dir, strength, bars['True_open'])
+                    signal = SignalEvent(strategy_id, symbol, dt, sig_dir, strength,
+                                             min(buy_threshold, bars['True_open']))
                     if self.decrease[symbol][dt]:
                         self.events.put(signal)
                         self.bought[symbol] = 'LONG'
@@ -314,10 +318,8 @@ class MLModelingStrategy(Strategy):
 
                 if buy_threshold > bars['True_low'] and buy_threshold < bars['True_high']:
                     sig_dir = 'LONG'
-                    if buy_threshold <= bars['True_open']:
-                        signal = SignalEvent(strategy_id, symbol, dt, sig_dir, strength, buy_threshold)
-                    else:
-                        signal = SignalEvent(strategy_id, symbol, dt, sig_dir, strength, bars['True_open'])
+                    signal = SignalEvent(strategy_id, symbol, dt, sig_dir, strength,
+                                             min(buy_threshold, bars['True_open']))
                     if self.decrease[symbol][dt]:
                         self.events.put(signal)
                         self.bought[symbol] = 'LONG'
