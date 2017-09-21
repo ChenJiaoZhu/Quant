@@ -202,10 +202,10 @@ def get_model():
               ("Lasso", Lasso(alpha=0.0002)),
               ("LSVR", LinearSVR(C=17.0)),
               ("SVR", SVR(C=100.0, gamma=0.01, epsilon=0.1, kernel='rbf')),
-              ("ETR", ExtraTreesRegressor(n_estimators=1000, n_jobs=2,
+              ("ETR", ExtraTreesRegressor(n_estimators=1000, n_jobs=2, random_state=1,
                                           max_features=0.5, max_depth=18,
                                           min_samples_split=6, min_samples_leaf=4)),
-              ("RFR", RandomForestRegressor(n_estimators=1000, n_jobs=2,
+              ("RFR", RandomForestRegressor(n_estimators=1000, n_jobs=2, random_state=1,
                                             max_features=0.5, max_depth=16,
                                             min_samples_split=5, min_samples_leaf=2))]
 

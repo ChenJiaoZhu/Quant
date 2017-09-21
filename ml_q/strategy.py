@@ -175,7 +175,7 @@ class MLModelingStrategy(Strategy):
 if __name__ == "__main__":
 
     codes = select_stock()
-    initial_capital = 300000.0
+    initial_capital = 10000.0
     heartbeat = 0.0
     start_date = '2007-01-01'
     backtest_date = '2016-08-01'
