@@ -3,7 +3,8 @@
 import pandas as pd
 from matplotlib import pyplot as plt
 from event import OrderEvent, SignalEvent
-from performance import create_sharpe_ratio, create_drawdowns, benchmark_return
+from performance import create_sharpe_ratio, \
+    create_drawdowns, benchmark_return
 
 
 class Portfolio(object):
@@ -12,13 +13,16 @@ class Portfolio(object):
     value of all instruments at a resolution of a "bar",
     i.e. secondly, minutely, 5-min, 30-min, 60 min or EOD.
 
-    The positions DataFrame stores a time-index of the
+    The positions DataFrame stores a time index of the
     quantity of positions held.
 
+    The prices DataFrame stores a time index of the trade
+    prices of each stock everyday whatever buy or sell.
+
     The holdings DataFrame stores the cash and total market
-    holdings value of each symbol for a particular
-    time-index, as well as the percentage change in
-    portfolio total across bars.
+    holdings value of each symbol for a particular time
+    index, as well as the percentage change in portfolio
+    total across bars.
 
     Parameters:
 
@@ -28,7 +32,8 @@ class Portfolio(object):
     backtest_date : The start datetime of back-test.
     initial_capital : The starting capital in RMB.
     """
-    def __init__(self, bars, events, start_date, backtest_date, initial_capital=500000.0):
+    def __init__(self, bars, events, start_date, backtest_date,
+                 initial_capital=500000.0):
 
         self.bars = bars
         self.events = events
@@ -53,8 +58,8 @@ class Portfolio(object):
 
     def _construct_all_positions(self):
         """
-        Constructs the positions list using the backtest_date object
-        to determine when the time index will begin.
+        Constructs the positions list using the backtest_date
+        object to determine when the time index will begin.
         """
         d = dict((s, 0) for s in self.symbol_list)
         d['datetime'] = self.backtest_date
@@ -62,17 +67,18 @@ class Portfolio(object):
 
     def _construct_all_prices(self):
         """
-        Constructs the prices list using the backtest_date object
-        to determine when the time index will begin.
+        Constructs the prices list using the backtest_date
+        object to determine when the time index will begin.
         """
-        d = dict([(s+'-', 0.0) for s in self.symbol_list] + [(s+'+', 0.0) for s in self.symbol_list])
+        d = dict([(s+'-', 0.0) for s in self.symbol_list] +
+                 [(s+'+', 0.0) for s in self.symbol_list])
         d['datetime'] = self.backtest_date
         return [d]
 
     def _construct_all_holdings(self):
         """
-        Constructs the holdings list using the backtest_date object
-        to determine when the time index will begin.
+        Constructs the holdings list using the backtest_date
+        object to determine when the time index will begin.
         """
         d = dict((s, 0.0) for s in self.symbol_list)
         d['datetime'] = self.backtest_date
@@ -87,7 +93,8 @@ class Portfolio(object):
 
     def update_signal(self, event):
         """
-        Acts on a SignalEvent to generate new orders based on the portfolio logic.
+        Acts on a SignalEvent to generate new orders based on
+        the portfolio logic.
         """
         if event.type == 'SIGNAL':
             order_event = self.generate_naive_order(event)
@@ -95,8 +102,9 @@ class Portfolio(object):
 
     def generate_naive_order(self, signal):
         """
-        Simply files an Order object as a constant quantity sizing of the signal
-        object, without risk management or position sizing considerations.
+        Simply files an Order object as a constant quantity
+        sizing of the signal object, without risk management
+        or position sizing considerations.
         """
         order = None
 
@@ -111,19 +119,23 @@ class Portfolio(object):
         order_type = 'LMT'
 
         if direction == 'LONG':
-            order = OrderEvent(symbol, datetime, order_type, lmt_quantity, price, 'BUY')
+            order = OrderEvent(symbol, datetime, order_type,
+                               lmt_quantity, price, 'BUY')
         if direction == 'EXIT':
             if cur_quantity < 100:
-                print 'Current quantity: %s is smaller than 100.' % cur_quantity
+                print 'Current quantity: %s is smaller than 100.' \
+                      % cur_quantity
                 raise KeyError
             else:
-                order = OrderEvent(symbol, datetime, order_type, cur_quantity, price, 'SELL')
+                order = OrderEvent(symbol, datetime, order_type,
+                                   cur_quantity, price, 'SELL')
 
         return order
 
     def update_fill(self, event):
         """
-        Updates the current positions and holdings of portfolio from a FillEvent.
+        Updates the current positions and holdings
+        of portfolio from a FillEvent.
         """
         if event.type == 'FILL':
             self.update_positions_from_fill(event)
@@ -132,7 +144,8 @@ class Portfolio(object):
 
     def update_positions_from_fill(self, fill):
         """
-        Takes a Fill object and updates the position matrix to reflect the new position.
+        Takes a Fill object and updates the position
+        matrix to reflect the new position.
         """
         fill_dir = 0
         if fill.direction == 'BUY':
@@ -144,7 +157,8 @@ class Portfolio(object):
 
     def update_prices_from_fill(self, fill):
         """
-        Takes a Fill object and updates the prices matrix to reflect the buy or sell price.
+        Takes a Fill object and updates the prices
+        matrix to reflect the buy or sell price.
         """
         if fill.direction == 'BUY':
             fill_dir = -1
@@ -156,7 +170,8 @@ class Portfolio(object):
 
     def update_holdings_from_fill(self, fill):
         """
-        Takes a Fill object and updates the holdings matrix to reflect the holdings value.
+        Takes a Fill object and updates the holdings
+        matrix to reflect the holdings value.
         """
         fill_dir = 0
         if fill.direction == 'BUY':
@@ -177,8 +192,9 @@ class Portfolio(object):
 
     def update_timeindex(self, day):
         """
-        Adds a complete performance record of one day to the performance matrix.
-        This also contains calculating the total market value of this day.
+        Adds a complete performance record of one day
+        to the performance matrix. This also contains
+        calculating the total market value of this day.
         """
         self.current_positions['datetime'] = self.bars.date
         self.all_positions.append(self.current_positions.copy())
@@ -206,12 +222,13 @@ class Portfolio(object):
         # Append the current holdings
         self.all_holdings.append(self.current_holdings.copy())
 
-        print 'Day %s[%s]: buy=%s, sell=%s, hold=%s.' % (day, self.bars.date,
-                                                         self.buy, self.sell, hold)
+        print 'Day %s[%s]: buy=%s, sell=%s, hold=%s.' % \
+              (day, self.bars.date, self.buy, self.sell, hold)
 
     def sell_all_holdings(self, date):
         """
-        Sells all the holdings by generating signal events to get the final return.
+        Sells all the holdings by generating signal
+        events to get the final return.
         """
         for s in self.symbol_list:
             if self.current_positions[s] > 0:
@@ -221,7 +238,8 @@ class Portfolio(object):
 
     def create_equity_curve_dataframe(self):
         """
-        Creates a pandas DataFrame from the all_holdings list of dictionaries.
+        Creates a pandas DataFrame from the
+        all_holdings list of dictionaries.
         """
         curve = pd.DataFrame(self.all_holdings)
         curve.set_index('datetime', inplace=True)
@@ -271,7 +289,9 @@ class Portfolio(object):
         return stats
 
     def plot_returns(self):
-
+        """
+        Plot the equity curve of our strategy and benchmark.
+        """
         strategy = self.equity_curve['equity_curve']
         benchmark, index = benchmark_return()
         fig, ax = plt.subplots()

@@ -1,9 +1,12 @@
 # Coding: UTF-8
+
 import pandas as pd
 
 
 def benchmark_return(index='000300', backtest_date='2016-08-01', end_date='2017-08-01'):
-
+    """
+    Gets the return series of given benchmark.
+    """
     import tushare as ts
 
     hs = ts.get_k_data(index, index=True)
@@ -18,7 +21,9 @@ def benchmark_return(index='000300', backtest_date='2016-08-01', end_date='2017-
 
 
 def create_sharpe_ratio(returns, freq='day', rf=0.03):
-
+    """
+    Calculates the sharpe ratio of given return series.
+    """
     if freq == 'day':
         sharpe_ratio = (returns.mean()*245 - rf) / (returns.std()*(245**0.5))
 
@@ -26,7 +31,10 @@ def create_sharpe_ratio(returns, freq='day', rf=0.03):
 
 
 def create_drawdowns(pnl):
-
+    """
+    Calculates the draw-down of given equity curve and
+    its max draw-down as well as corresponding duration.
+    """
     drawdown = pnl.copy().rename('drawdown')
     period = []
     for i in pnl.index:

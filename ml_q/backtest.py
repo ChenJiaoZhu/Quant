@@ -22,12 +22,18 @@ class Backtest(object):
     backtest_date : The start datetime of back-test.
     data_handler : (Class) Handles the market data feed.
     execution_handler : (Class) Handles the orders/fills for trades.
-    portfolio : (Class) Keeps track of portfolio current and prior positions.
+    portfolio : (Class) Keeps track of all portfolio information.
     strategy : (Class) Generates signals based on market data.
+    threshold : One trade return of each stock which decides
+                the price to buy or sell.
+    per_return : Expect return of each stock.
+    ndays : How many days look back.
+    idays : How many days the price decreased.
     """
-    def __init__(self, symbol_list, initial_capital, heartbeat, start_date,
-                 backtest_date, data_handler, execution_handler, portfolio,
-                 strategy, threshold, per_return, ndays, idays):
+    def __init__(self, symbol_list, initial_capital, heartbeat,
+                 start_date, backtest_date, data_handler,
+                 execution_handler, portfolio, strategy,
+                 threshold, per_return, ndays, idays):
 
         self.symbol_list = symbol_list
         self.initial_capital = initial_capital
@@ -41,6 +47,8 @@ class Backtest(object):
         self.strategy_cls = strategy
         self.threshold = threshold
         self.per_return = per_return
+        self.ndays = ndays
+        self.idays = idays
 
         self.events = queue.Queue()
 
@@ -48,20 +56,30 @@ class Backtest(object):
         self.orders = 0
         self.fills = 0
 
-        self._generate_trading_instances(ndays, idays)
+        self._generate_trading_instances()
 
-    def _generate_trading_instances(self, ndays, idays):
+    def _generate_trading_instances(self):
         """
         Generates the trading instance objects from their class types.
         """
         print "Creating DataHandler, Strategy, Portfolio and ExecutionHandler..."
-        self.data_handler = self.data_handler_cls(self.events, self.start_date,
-                                                  self.backtest_date, self.symbol_list)
-        self.strategy = self.strategy_cls(self.data_handler, self.events, ndays, idays,
-                                          self.threshold, self.per_return)
-        self.portfolio = self.portfolio_cls(self.data_handler, self.events, self.start_date,
-                                            self.backtest_date, self.initial_capital)
+        self.data_handler = self.data_handler_cls(self.events,
+                                                  self.start_date,
+                                                  self.backtest_date,
+                                                  self.symbol_list)
+        self.strategy = self.strategy_cls(self.data_handler,
+                                          self.events,
+                                          self.ndays,
+                                          self.idays,
+                                          self.threshold,
+                                          self.per_return)
+        self.portfolio = self.portfolio_cls(self.data_handler,
+                                            self.events,
+                                            self.start_date,
+                                            self.backtest_date,
+                                            self.initial_capital)
         self.execution_handler = self.execution_handler_cls(self.events)
+
         self.data_handler.get_portfolio(self.portfolio)
 
     def _run_backtest(self):
@@ -110,16 +128,18 @@ class Backtest(object):
         """
         self.portfolio.create_equity_curve_dataframe()
 
-        # print "Creating summary stats..."
-        # stats = self.portfolio.output_summary_stats()
+        print "Creating summary stats..."
+        stats = self.portfolio.output_summary_stats()
 
         print "Creating equity curve..."
         print self.portfolio.equity_curve.iloc[-1, :]
-        # pprint.pprint(stats)
+        pprint.pprint(stats)
 
         print "Signals: %s" % self.signals
         print "Orders: %s" % self.orders
         print "Fills: %s" % self.fills
+
+        self.portfolio.plot_returns()
 
     def simulate_trading(self):
         """

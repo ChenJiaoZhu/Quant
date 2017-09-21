@@ -1,8 +1,4 @@
-Add restrict on buy threshold and sell threshold: 308880
-delete 6 stock: 310861
-add restrict [10, 7]: 312247, 12247/150000.=0.08164666666666667
-
-best [5, 3]: 307290, 7290/80000.=0.091125
+# param search for strategy.
 
 一、rolling differ
         total_times  commission   earn   spent       rtn   max_rtn

@@ -249,7 +249,18 @@ def split_by_weigh(X, y, w = 0.3):
 
 
 class DataHandler(object):
+    """
+    The DataHandler class handles all the jobs related to data such as
+    get the original data from database, pre-process, feature extract,
+    update time index, get the new data and return the particular info.
 
+    Parameters:
+
+    events : The Event object.
+    start_date : The start datetime of the strategy.
+    backtest_date : The start datetime of back-test.
+    symbol_list : The list of symbol strings.
+    """
     def __init__(self, events, start_date, backtest_date, symbol_list):
 
         self.events = events
@@ -261,9 +272,12 @@ class DataHandler(object):
         self._get_data(start_date, backtest_date, symbol_list)
 
     def _get_data(self, sd, bd, symbol):
-
+        """
+        Gets the processed data.
+        """
         X, y, backtest_X, backtest_y_info = Get_Data(symbol, type_y='reg',
-                                                     backtest_date=bd, start_date=sd)
+                                                     backtest_date=bd,
+                                                     start_date=sd)
         self.X = X
         self.y = y
         self.backtest_X = backtest_X
@@ -273,10 +287,15 @@ class DataHandler(object):
                                         columns=backtest_y_info.columns)
 
     def get_portfolio(self, portfolio):
+        """
+        Connects with the Portfolio object.
+        """
         self.portfolio = portfolio
 
     def update_bars(self, day):
-
+        """
+        Update the time index and get corresponding new data.
+        """
         self.portfolio.buy = 0
         self.portfolio.sell = 0
         self.portfolio.current_prices = dict([(s+'-', 0) for s in self.symbol_list] +
@@ -299,7 +318,10 @@ class DataHandler(object):
             self.continue_backtest = False
 
     def whether_decrease(self, ndays, idays):
-
+        """
+        Creates the decrease dictionary which records how many days
+        the price of each stock was decreased everyday by rolling.
+        """
         decrease = {}
         for symbol in self.symbol_list:
             y_info = self.backtest_y_info[self.backtest_y_info['Code'] == symbol]
@@ -325,7 +347,10 @@ class DataHandler(object):
         return decrease
 
     def whether_decrease_fix_day(self, ndays, idays):
-
+        """
+        Creates the decrease dictionary which records how many days the
+        price of each stock was decreased everyday compared with last day.
+        """
         decrease = {}
         for symbol in self.symbol_list:
             y_info = self.backtest_y_info[self.backtest_y_info['Code'] == symbol]
@@ -351,18 +376,33 @@ class DataHandler(object):
         return decrease
 
     def get_latest_bar_values(self, index):
+        """
+        Gets the newest bar values.
+        """
         return self.bar_y_info.iloc[index, :]
 
     def get_latest_bar_value(self, symbol, type):
+        """
+        Gets one of the newest bar value depends on the required type.
+        """
         return self.latest_bars.loc[symbol, type]
 
     def get_current_position(self, symbol):
+        """
+        Gets the position of given symbol at this day.
+        """
         return self.portfolio.current_positions[symbol]
 
     def get_current_holding(self, symbol):
+        """
+        Gets the holding of given symbol at this day.
+        """
         return self.portfolio.current_holdings[symbol]
 
     def get_last_holding(self, symbol):
+        """
+        Gets the holding of given symbol at last sell day.
+        """
         return self.portfolio.last_holdings[symbol]
 
 
