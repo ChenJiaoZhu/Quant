@@ -1,0 +1,334 @@
+X value test [stock code: 000001]:
+
+一、[unnormalized X，212 features]
+LR:
+R^2 on training set: 0.088463
+R^2 on test set: -0.412788
+2017-08-19 12:49:53.387351
+
+Ridge:
+R^2 on training set: 0.075004
+R^2 on test set: -0.308927
+2017-08-19 12:49:53.409320
+
+LSVR:
+R^2 on training set: -0.206536
+R^2 on test set: -0.660479
+2017-08-19 12:49:55.794057
+
+SVR:
+R^2 on training set: 0.004026
+R^2 on test set: -0.027716
+2017-08-19 12:49:57.605952
+
+ETR:
+R^2 on training set: 1.000000
+R^2 on test set: -0.255343
+2017-08-19 12:50:24.563254
+
+RFR:
+R^2 on training set: 0.854729
+R^2 on test set: -0.329030
+2017-08-19 12:52:55.532147
+
+
+二、[normalized X，212 features]
+LR:
+R^2 on training set: 0.088463
+R^2 on test set: -0.412788
+2017-08-19 12:01:19.243202
+
+Ridge:
+R^2 on training set: 0.050452
+R^2 on test set: -0.102629
+2017-08-19 12:01:19.271452
+
+LSVR:
+R^2 on training set: 0.033484
+R^2 on test set: -0.060114
+2017-08-19 12:01:20.308228
+
+SVR:
+R^2 on training set: 0.001061
+R^2 on test set: -0.002997
+2017-08-19 12:01:22.372296
+
+ETR:
+R^2 on training set: 1.000000
+R^2 on test set: -0.159466
+2017-08-19 12:01:52.980433
+
+RFR:
+R^2 on training set: 0.855144
+R^2 on test set: -0.413712
+2017-08-19 12:04:38.271259
+
+
+三、[normalized X*8，212 features]
+LR:
+R^2 on training set: 0.088463
+R^2 on test set: -0.412788
+2017-08-19 12:09:37.094828
+
+Ridge:
+R^2 on training set: 0.079922
+R^2 on test set: -0.286444
+2017-08-19 12:09:37.123950
+
+LSVR:
+R^2 on training set: -1.188699
+R^2 on test set: -0.745683
+2017-08-19 12:09:40.647357
+
+SVR:
+R^2 on training set: 0.002171
+R^2 on test set: -0.033565
+2017-08-19 12:09:43.280061
+
+ETR:
+R^2 on training set: 1.000000
+R^2 on test set: -0.215942
+2017-08-19 12:10:26.022094
+
+RFR:
+R^2 on training set: 0.853258
+R^2 on test set: -0.389751
+2017-08-19 12:13:25.746538
+
+
+四、[normalized X*32，212 features]
+LR:
+R^2 on training set: 0.088463
+R^2 on test set: -0.412788
+2017-08-19 12:15:34.859747
+
+Ridge:
+R^2 on training set: 0.083492
+R^2 on test set: -0.319053
+2017-08-19 12:15:34.883410
+
+LSVR:
+R^2 on training set: -0.234773
+R^2 on test set: -0.664434
+2017-08-19 12:15:37.626506
+
+SVR:
+R^2 on training set: 0.033373
+R^2 on test set: -0.165779
+2017-08-19 12:15:39.730103
+
+ETR:
+R^2 on training set: 1.000000
+R^2 on test set: -0.153985
+2017-08-19 12:16:09.744921
+
+RFR:
+R^2 on training set: 0.855635
+R^2 on test set: -0.441526
+2017-08-19 12:18:44.282160
+
+
+五、[normalized X*128，212 features]
+LR:
+R^2 on training set: 0.088463
+R^2 on test set: -0.412788
+2017-08-19 12:21:09.189705
+
+Ridge:
+R^2 on training set: 0.084272
+R^2 on test set: -0.321111
+2017-08-19 12:21:09.213383
+
+LSVR:
+R^2 on training set: -1.174540
+R^2 on test set: -1.372193
+2017-08-19 12:21:11.954892
+
+SVR:
+R^2 on training set: 0.485189
+R^2 on test set: -0.546751
+2017-08-19 12:21:14.309013
+
+ETR:
+R^2 on training set: 1.000000
+R^2 on test set: -0.147921
+2017-08-19 12:21:42.203943
+
+RFR:
+R^2 on training set: 0.853852
+R^2 on test set: -0.493376
+2017-08-19 12:24:22.707725
+
+
+六、[normalized X*512，212 features]
+LR:
+R^2 on training set: 0.088463
+R^2 on test set: -0.412788
+2017-08-19 12:26:28.207976
+
+Ridge:
+R^2 on training set: 0.085361
+R^2 on test set: -0.316595
+2017-08-19 12:26:28.229899
+
+LSVR:
+R^2 on training set: -2.201479
+R^2 on test set: -1.625544
+2017-08-19 12:26:30.691115
+
+SVR:
+R^2 on training set: 0.795895
+R^2 on test set: -0.000137
+2017-08-19 12:26:32.801374
+
+ETR:
+R^2 on training set: 1.000000
+R^2 on test set: -0.168733
+2017-08-19 12:26:59.880742
+
+RFR:
+R^2 on training set: 0.858406
+R^2 on test set: -0.377624
+2017-08-19 12:31:51.053279
+
+
+七、[normalized X*1024，212 features]
+LR:
+R^2 on training set: 0.088463
+R^2 on test set: -0.412788
+2017-08-19 12:33:00.306358
+
+Ridge:
+R^2 on training set: 0.086155
+R^2 on test set: -0.327635
+2017-08-19 12:33:00.333999
+
+LSVR:
+R^2 on training set: -7.381504
+R^2 on test set: -9.289236
+2017-08-19 12:33:03.533524
+
+SVR:
+R^2 on training set: 0.797330
+R^2 on test set: -0.000301
+2017-08-19 12:33:06.088807
+
+ETR:
+R^2 on training set: 1.000000
+R^2 on test set: -0.169626
+2017-08-19 12:33:56.000729
+
+RFR:
+R^2 on training set: 0.852527
+R^2 on test set: -0.336747
+2017-08-19 12:36:35.950030
+
+
+八、[normalized X*2048，212 features]
+LR:
+R^2 on training set: 0.088463
+R^2 on test set: -0.412788
+2017-08-19 12:38:24.684944
+
+Ridge:
+R^2 on training set: 0.087244
+R^2 on test set: -0.355144
+2017-08-19 12:38:24.706617
+
+LSVR:
+R^2 on training set: -1.298906
+R^2 on test set: -1.500903
+2017-08-19 12:38:27.297458
+
+SVR:
+R^2 on training set: 0.797415
+R^2 on test set: -0.000301
+2017-08-19 12:38:29.418845
+
+ETR:
+R^2 on training set: 1.000000
+R^2 on test set: -0.158984
+2017-08-19 12:38:56.175650
+
+RFR:
+R^2 on training set: 0.855779
+R^2 on test set: -0.354263
+2017-08-19 12:41:31.292404
+
+
+九、[normalized X*4096，212 features]
+LR:
+R^2 on training set: 0.088463
+R^2 on test set: -0.412788
+2017-08-19 12:41:56.907021
+
+Ridge:
+R^2 on training set: 0.087763
+R^2 on test set: -0.384187
+2017-08-19 12:41:56.926069
+
+LSVR:
+R^2 on training set: -1.091030
+R^2 on test set: -0.708491
+2017-08-19 12:41:59.583130
+
+SVR:
+R^2 on training set: 0.797414
+R^2 on test set: -0.000301
+2017-08-19 12:42:01.367420
+
+ETR:
+R^2 on training set: 1.000000
+R^2 on test set: -0.178800
+2017-08-19 12:42:26.141032
+
+RFR:
+R^2 on training set: 0.853319
+R^2 on test set: -0.428710
+2017-08-19 12:44:57.575132
+
+
+十、[normalized X*8192，212 features]
+LR:
+R^2 on training set: 0.088463
+R^2 on test set: -0.412788
+2017-08-19 12:45:42.005608
+
+Ridge:
+R^2 on training set: 0.087851
+R^2 on test set: -0.398157
+2017-08-19 12:45:42.022771
+
+LSVR:
+R^2 on training set: -1.375344
+R^2 on test set: -1.641612
+2017-08-19 12:45:44.412901
+
+SVR:
+R^2 on training set: 0.797414
+R^2 on test set: -0.000301
+2017-08-19 12:45:46.452074
+
+ETR:
+R^2 on training set: 1.000000
+R^2 on test set: -0.193699
+2017-08-19 12:46:12.023406
+
+RFR:
+R^2 on training set: 0.853643
+R^2 on test set: -0.351293
+2017-08-19 12:48:45.586645
+
+
+
+对于arbitrarily worse数据，相同特征下，其结论如下：
+LR、ETR、RFR：结果与是否归一化、是否数值放大无关。
+
+是否归一化：
+1、数据归一化后，Ridge、SVR在训练集上表现变差，在测试集上表现变好。
+2、数据归一化后，LSVR表现变好。
+
+数值放大：
+1、数据放大后，Ridge在训练集上表现变好，在测试集上表现变差。
+2、数据放大后，SVR表现变好，但超过512倍后便分别达到0.79，-0.00301不再改变。
+3、数据放大后，LSVR表现的变化无规律。

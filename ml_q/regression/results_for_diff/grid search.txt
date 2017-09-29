@@ -1,0 +1,80 @@
+[全X](3180，212)
+
+GridSearchCV(SVR(), tuned_parameters, cv=5, n_jobs=3)
+Optimised parameters found on training set:
+SVR(C=1, cache_size=200, coef0=0.0, degree=3, epsilon=0.1, gamma=1e-05,
+  kernel='rbf', max_iter=-1, shrinking=True, tol=0.001, verbose=False) 
+R^2 scores calculated on training set:
+-0.377 for {'kernel': 'rbf', 'C': 1, 'gamma': 0.01}
+-0.160 for {'kernel': 'rbf', 'C': 1, 'gamma': 0.001}
+-0.103 for {'kernel': 'rbf', 'C': 1, 'gamma': 0.0001}
+-0.065 for {'kernel': 'rbf', 'C': 1, 'gamma': 1e-05}
+-0.411 for {'kernel': 'rbf', 'C': 10, 'gamma': 0.01}
+-0.556 for {'kernel': 'rbf', 'C': 10, 'gamma': 0.001}
+-0.151 for {'kernel': 'rbf', 'C': 10, 'gamma': 0.0001}
+-0.112 for {'kernel': 'rbf', 'C': 10, 'gamma': 1e-05}
+-0.411 for {'kernel': 'rbf', 'C': 100, 'gamma': 0.01}
+-1.620 for {'kernel': 'rbf', 'C': 100, 'gamma': 0.001}
+-0.271 for {'kernel': 'rbf', 'C': 100, 'gamma': 0.0001}
+-0.167 for {'kernel': 'rbf', 'C': 100, 'gamma': 1e-05}
+-0.411 for {'kernel': 'rbf', 'C': 1000, 'gamma': 0.01}
+-1.882 for {'kernel': 'rbf', 'C': 1000, 'gamma': 0.001}
+-0.889 for {'kernel': 'rbf', 'C': 1000, 'gamma': 0.0001}
+-0.243 for {'kernel': 'rbf', 'C': 1000, 'gamma': 1e-05}
+-0.411 for {'kernel': 'rbf', 'C': 10000, 'gamma': 0.01}
+-1.882 for {'kernel': 'rbf', 'C': 10000, 'gamma': 0.001}
+-3.178 for {'kernel': 'rbf', 'C': 10000, 'gamma': 0.0001}
+-0.423 for {'kernel': 'rbf', 'C': 10000, 'gamma': 1e-05}
+SVR(C=10000, cache_size=200, coef0=0.0, degree=3, epsilon=0.1, gamma=1e-05,
+  kernel='poly', max_iter=-1, shrinking=True, tol=0.001, verbose=False) 
+R^2 scores calculated on training set:
+-2.317 for {'kernel': 'poly', 'C': 1, 'gamma': 0.01}
+-0.047 for {'kernel': 'poly', 'C': 1, 'gamma': 0.001}
+-0.000 for {'kernel': 'poly', 'C': 1, 'gamma': 0.0001}
+-0.000 for {'kernel': 'poly', 'C': 1, 'gamma': 1e-05}
+-2.876 for {'kernel': 'poly', 'C': 10, 'gamma': 0.01}
+-0.240 for {'kernel': 'poly', 'C': 10, 'gamma': 0.001}
+-0.000 for {'kernel': 'poly', 'C': 10, 'gamma': 0.0001}
+-0.000 for {'kernel': 'poly', 'C': 10, 'gamma': 1e-05}
+-2.876 for {'kernel': 'poly', 'C': 100, 'gamma': 0.01}
+-0.815 for {'kernel': 'poly', 'C': 100, 'gamma': 0.001}
+-0.005 for {'kernel': 'poly', 'C': 100, 'gamma': 0.0001}
+-0.000 for {'kernel': 'poly', 'C': 100, 'gamma': 1e-05}
+-2.876 for {'kernel': 'poly', 'C': 1000, 'gamma': 0.01}
+-2.317 for {'kernel': 'poly', 'C': 1000, 'gamma': 0.001}
+-0.047 for {'kernel': 'poly', 'C': 1000, 'gamma': 0.0001}
+-0.000 for {'kernel': 'poly', 'C': 1000, 'gamma': 1e-05}
+-2.876 for {'kernel': 'poly', 'C': 10000, 'gamma': 0.01}
+-2.876 for {'kernel': 'poly', 'C': 10000, 'gamma': 0.001}
+-0.240 for {'kernel': 'poly', 'C': 10000, 'gamma': 0.0001}
+-0.000 for {'kernel': 'poly', 'C': 10000, 'gamma': 1e-05}
+
+
+[24X](3180，24)
+
+GridSearchCV(SVR(), tuned_parameters, cv=5, n_jobs=3)
+Optimised parameters found on training set:
+SVR(C=1, cache_size=200, coef0=0.0, degree=3, epsilon=0.1, gamma=1e-05,
+  kernel='rbf', max_iter=-1, shrinking=True, tol=0.001, verbose=False) 
+R^2 scores calculated on training set:
+-0.213 for {'kernel': 'rbf', 'C': 1, 'gamma': 0.01}
+-0.088 for {'kernel': 'rbf', 'C': 1, 'gamma': 0.001}
+-0.031 for {'kernel': 'rbf', 'C': 1, 'gamma': 0.0001}
+-0.001 for {'kernel': 'rbf', 'C': 1, 'gamma': 1e-05}
+-0.463 for {'kernel': 'rbf', 'C': 10, 'gamma': 0.01}
+-0.130 for {'kernel': 'rbf', 'C': 10, 'gamma': 0.001}
+-0.096 for {'kernel': 'rbf', 'C': 10, 'gamma': 0.0001}
+-0.031 for {'kernel': 'rbf', 'C': 10, 'gamma': 1e-05}
+-1.376 for {'kernel': 'rbf', 'C': 100, 'gamma': 0.01}
+-0.256 for {'kernel': 'rbf', 'C': 100, 'gamma': 0.001}
+-0.119 for {'kernel': 'rbf', 'C': 100, 'gamma': 0.0001}
+-0.097 for {'kernel': 'rbf', 'C': 100, 'gamma': 1e-05}
+-3.440 for {'kernel': 'rbf', 'C': 1000, 'gamma': 0.01}
+-0.571 for {'kernel': 'rbf', 'C': 1000, 'gamma': 0.001}
+-0.148 for {'kernel': 'rbf', 'C': 1000, 'gamma': 0.0001}
+-0.110 for {'kernel': 'rbf', 'C': 1000, 'gamma': 1e-05}
+-5.567 for {'kernel': 'rbf', 'C': 10000, 'gamma': 0.01}
+-1.300 for {'kernel': 'rbf', 'C': 10000, 'gamma': 0.001}
+-0.268 for {'kernel': 'rbf', 'C': 10000, 'gamma': 0.0001}
+-0.129 for {'kernel': 'rbf', 'C': 10000, 'gamma': 1e-05}
+
