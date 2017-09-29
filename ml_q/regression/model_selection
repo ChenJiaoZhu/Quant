@@ -1,6 +1,6 @@
 Cross Validation:
 
-一、single model [normalized X.shape = (105120, 212)]
+一、single model [normalized,  X.shape = (105120, 212),  X_train.shape=(73584, 212)]
 
 [R^2 on mean test score]
 LR:
@@ -733,7 +733,7 @@ RFR:    ['n_estimators': 1000 [900-1200], 'max_depth': 20 [16-29], 'min_samples_
 
 
 
-二、final [normalized X.shape = (105120, 212)]
+二、final [normalized,  X_train.shape=(73584, 78),  X_train.shape=(73584, 48)]
 
 
 ETR:    ['n_estimators': 1000 [800-1200], 'max_features': 0.5 [0.3-0.7], 'max_depth': 15 [11-19], 'min_samples_leaf': 3 [1-5],'min_samples_split': 5 [2-19]]
